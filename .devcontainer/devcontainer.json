@@ -1,0 +1,12 @@
+{
+	"name": "dl-prefetch",
+	"dockerFile": "Dockerfile",
+	"remoteUser": "default",
+	"settings": { 
+		"terminal.integrated.shell.linux": "/bin/bash"
+	},
+	"extensions": [
+		"ms-azuretools.vscode-docker"
+	],
+	"mounts": ["source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/default/.ssh,type=bind,consistency=default"]
+}
