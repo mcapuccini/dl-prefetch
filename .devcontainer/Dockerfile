@@ -10,6 +10,10 @@ ARG USERNAME=default
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 
+# Pin
+ARG PIN_VERSION=3.13-98189-g60a6ef199
+ENV PIN_HOME=/opt/pin-${PIN_VERSION}-gcc-linux
+
 # Configure apt
 RUN apt-get update \
     && apt-get -y install --no-install-recommends apt-utils dialog 2>&1 \
@@ -19,9 +23,16 @@ RUN apt-get update \
     sudo \
     git \
     build-essential \
+    curl \
     && apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* \
+    #
+    # Download pin and compile MemTrace tool
+    && sh -c 'curl https://software.intel.com/sites/landingpage/pintool/downloads/pin-${PIN_VERSION}-gcc-linux.tar.gz | tar -xvz -C /opt' \
+    && make -C ${PIN_HOME}/source/tools/MemTrace \
+    && ln -s $PIN_HOME/pin /usr/local/bin/ \
+    && ln -s $PIN_HOME/source/tools/MemTrace/obj-intel64/*.so /usr/local/bin/ \
     #
     # Create a non-root user to use if preferred
     && groupadd --gid $USER_GID $USERNAME \
