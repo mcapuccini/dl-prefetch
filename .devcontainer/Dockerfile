@@ -43,7 +43,7 @@ RUN apt-get update \
     && ln -s $PIN_HOME/source/tools/MemTrace/obj-intel64/*.so /usr/local/bin/ \
     #
     # Download PARSEC and compile benchmarks
-    && sh -c 'curl -L http://parsec.cs.princeton.edu/download/${PARSEC_VERSION}/parsec-${PARSEC_VERSION}-core.tar.gz | tar -xvz -C /opt' \
+    && sh -c 'curl -L http://parsec.cs.princeton.edu/download/${PARSEC_VERSION}/parsec-${PARSEC_VERSION}.tar.gz | tar -xvz -C /opt' \
     && parsecmgmt -a build -p canneal -c gcc-serial \
     && parsecmgmt -a fullclean -p all \
     #
