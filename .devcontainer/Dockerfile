@@ -32,6 +32,7 @@ RUN apt-get update \
     git \
     build-essential \
     curl \
+    m4 \
     && apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* \
@@ -44,7 +45,8 @@ RUN apt-get update \
     #
     # Download PARSEC and compile benchmarks
     && sh -c 'curl -L http://parsec.cs.princeton.edu/download/${PARSEC_VERSION}/parsec-${PARSEC_VERSION}.tar.gz | tar -xvz -C /opt' \
-    && parsecmgmt -a build -p all \
+    && parsecmgmt -a build -p canneal -c gcc-serial \
+    && parsecmgmt -a build -p canneal -c gcc-pthreads \
     && parsecmgmt -a fullclean -p all \
     #
     # Create a non-root user to use if preferred
