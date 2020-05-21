@@ -44,7 +44,7 @@ RUN apt-get update \
     #
     # Download PARSEC and compile benchmarks
     && sh -c 'curl -L http://parsec.cs.princeton.edu/download/${PARSEC_VERSION}/parsec-${PARSEC_VERSION}.tar.gz | tar -xvz -C /opt' \
-    && parsecmgmt -a build -p canneal -c gcc-serial \
+    && parsecmgmt -a build -p all \
     && parsecmgmt -a fullclean -p all \
     #
     # Create a non-root user to use if preferred
