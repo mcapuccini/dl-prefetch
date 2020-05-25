@@ -43,10 +43,8 @@ RUN apt-get update \
     && ln -s $PIN_HOME/pin /usr/local/bin/ \
     && ln -s $PIN_HOME/source/tools/MemTrace/obj-intel64/*.so /usr/local/bin/ \
     #
-    # Download PARSEC and compile benchmarks
+    # Install PARSEC
     && sh -c 'curl -L http://parsec.cs.princeton.edu/download/${PARSEC_VERSION}/parsec-${PARSEC_VERSION}-core.tar.gz | tar -xvz -C /opt' \
-    && parsecmgmt -a build -p canneal -c gcc-serial \
-    && parsecmgmt -a fullclean -p all \
     #
     # Create a non-root user to use if preferred
     && groupadd --gid $USER_GID $USERNAME \
