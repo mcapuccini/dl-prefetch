@@ -37,11 +37,13 @@ RUN apt-get update \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* \
     #
-    # Download pin and compile MemTrace tool
+    # Download pin and compile tools
     && sh -c 'curl https://software.intel.com/sites/landingpage/pintool/downloads/pin-${PIN_VERSION}-gcc-linux.tar.gz | tar -xvz -C /opt' \
     && make -C ${PIN_HOME}/source/tools/MemTrace \
+    && make -C ${PIN_HOME}/source/tools/ManualExamples \
     && ln -s $PIN_HOME/pin /usr/local/bin/ \
     && ln -s $PIN_HOME/source/tools/MemTrace/obj-intel64/*.so /usr/local/bin/ \
+    && ln -s $PIN_HOME/source/tools/ManualExamples/obj-intel64/*.so /usr/local/bin/ \
     #
     # Install PARSEC
     && sh -c 'curl -L http://parsec.cs.princeton.edu/download/${PARSEC_VERSION}/parsec-${PARSEC_VERSION}-core.tar.gz | tar -xvz -C /opt' \
