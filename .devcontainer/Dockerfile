@@ -15,7 +15,7 @@ ARG PIN_VERSION=3.13-98189-g60a6ef199
 ENV PIN_HOME=/opt/pin-${PIN_VERSION}-gcc-linux
 
 # Parsec
-ARG PARSEC_VERSION=3.0-core
+ARG PARSEC_VERSION=3.0
 ENV PARSECDIR=/opt/parsec-${PARSEC_VERSION}
 ENV PATH=${PATH}:${PARSECDIR}/bin
 ENV MANPATH=${MANPATH}:${PARSECDIR}/man
@@ -44,7 +44,7 @@ RUN apt-get update \
     && ln -s $PIN_HOME/source/tools/MemTrace/obj-intel64/*.so /usr/local/bin/ \
     #
     # Download PARSEC and compile benchmarks
-    && sh -c 'curl -L http://parsec.cs.princeton.edu/download/${PARSEC_VERSION}/parsec-${PARSEC_VERSION}.tar.gz | tar -xvz -C /opt' \
+    && sh -c 'curl -L http://parsec.cs.princeton.edu/download/${PARSEC_VERSION}/parsec-${PARSEC_VERSION}-core.tar.gz | tar -xvz -C /opt' \
     && parsecmgmt -a build -p canneal -c gcc-serial \
     && parsecmgmt -a fullclean -p all \
     #
