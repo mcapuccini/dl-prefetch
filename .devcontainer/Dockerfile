@@ -15,7 +15,7 @@ ARG PIN_VERSION=3.13-98189-g60a6ef199
 ENV PIN_HOME=/opt/pin-${PIN_VERSION}-gcc-linux
 
 # Parsec
-ARG PARSEC_VERSION=3.0
+ARG PARSEC_VERSION=3.0-core
 ENV PARSECDIR=/opt/parsec-${PARSEC_VERSION}
 ENV PATH=${PATH}:${PARSECDIR}/bin
 ENV MANPATH=${MANPATH}:${PARSECDIR}/man
@@ -46,7 +46,6 @@ RUN apt-get update \
     # Download PARSEC and compile benchmarks
     && sh -c 'curl -L http://parsec.cs.princeton.edu/download/${PARSEC_VERSION}/parsec-${PARSEC_VERSION}.tar.gz | tar -xvz -C /opt' \
     && parsecmgmt -a build -p canneal -c gcc-serial \
-    && parsecmgmt -a build -p canneal -c gcc-pthreads \
     && parsecmgmt -a fullclean -p all \
     #
     # Create a non-root user to use if preferred
