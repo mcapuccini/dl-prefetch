@@ -1,7 +1,7 @@
 {
 	"name": "dl-prefetch",
 	"image": "mcapuccini/dl-prefetch",
-	"remoteUser": "default",
+	"remoteUser": "root",
 	"settings": { 
 		"terminal.integrated.shell.linux": "/bin/bash"
 	},

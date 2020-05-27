@@ -7,17 +7,27 @@ branches:
 services:
   - docker
 
+env:
+  matrix:
+    - >
+      PARSEC_VERSION=3.0
+      TAG=latest
+    - >
+      PARSEC_VERSION=2.1
+      TAG=parsec-2.1
+
 script:
   - docker pull $TRAVIS_REPO_SLUG || true
   - >
     docker build 
-    -t $TRAVIS_REPO_SLUG 
+    -t ${TRAVIS_REPO_SLUG}:${TAG}
     -f .devcontainer/Dockerfile 
-    --cache-from $TRAVIS_REPO_SLUG
+    --build-arg PARSEC_VERSION=${PARSEC_VERSION}
+    --cache-from
     .
 after_success:
   - >
     if [ $TRAVIS_BRANCH = 'master' ] && [ $TRAVIS_PULL_REQUEST = 'false' ]; then
       docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-      docker push $TRAVIS_REPO_SLUG
+      docker push ${TRAVIS_REPO_SLUG}:${TAG}
     fi
