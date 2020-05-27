@@ -8,5 +8,8 @@
 	"extensions": [
 		"ms-azuretools.vscode-docker"
 	],
-	"mounts": ["source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/default/.ssh,type=bind,consistency=default"]
+	"mounts": [
+		"source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/default/.ssh,type=bind,consistency=default",
+		"source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/root/.ssh,type=bind,consistency=default",
+	]
 }
