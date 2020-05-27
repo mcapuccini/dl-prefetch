@@ -17,13 +17,13 @@ env:
       TAG=parsec-2.1
 
 script:
-  - docker pull $TRAVIS_REPO_SLUG || true
+  - docker pull ${TRAVIS_REPO_SLUG}:${TAG} || true
   - >
     docker build 
     -t ${TRAVIS_REPO_SLUG}:${TAG}
     -f .devcontainer/Dockerfile 
     --build-arg PARSEC_VERSION=${PARSEC_VERSION}
-    --cache-from
+    --cache-from ${TRAVIS_REPO_SLUG}:${TAG}
     .
 after_success:
   - >
