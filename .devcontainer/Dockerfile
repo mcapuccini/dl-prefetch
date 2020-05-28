@@ -1,6 +1,6 @@
   
 # Start from ubuntu container
-FROM tensorflow/tensorflow:2.1.1-jupyter
+FROM tensorflow/tensorflow:2.2.0-jupyter
 
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
@@ -36,6 +36,9 @@ RUN apt-get update \
     && apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* \
+    #
+    # Install pip deps
+    && pip --disable-pip-version-check --no-cache-dir install tensorflow-probability \
     #
     # Download pin and compile tools
     && sh -c 'curl https://software.intel.com/sites/landingpage/pintool/downloads/pin-${PIN_VERSION}-gcc-linux.tar.gz | tar -xvz -C /opt' \
