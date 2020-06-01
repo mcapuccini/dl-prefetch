@@ -40,7 +40,6 @@ RUN apt-get update \
     # Install pip deps
     && pip --disable-pip-version-check --no-cache-dir install \
     tensorflow-probability \
-    tensorflow-datasets \
     #
     # Download pin and compile tools
     && sh -c 'curl https://software.intel.com/sites/landingpage/pintool/downloads/pin-${PIN_VERSION}-gcc-linux.tar.gz | tar -xvz -C /opt' \
