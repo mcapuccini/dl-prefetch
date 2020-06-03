@@ -1,6 +1,6 @@
 {
 	"name": "dl-prefetch",
-	"dockerFile": "Dockerfile",
+	"dockerFile": "../Dockerfile",
 	"remoteUser": "default",
 	"settings": { 
 		"terminal.integrated.shell.linux": "/bin/bash",

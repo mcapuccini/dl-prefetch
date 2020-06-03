@@ -21,7 +21,6 @@ script:
   - >
     docker build 
     -t ${TRAVIS_REPO_SLUG}:${TAG}
-    -f .devcontainer/Dockerfile 
     --build-arg PARSEC_VERSION=${PARSEC_VERSION}
     --cache-from ${TRAVIS_REPO_SLUG}:${TAG}
     .
