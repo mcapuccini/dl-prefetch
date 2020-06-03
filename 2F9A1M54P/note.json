@@ -1,9 +1,9 @@
 {
   "paragraphs": [
     {
-      "text": "# test",
+      "text": "# test 2",
       "user": "anonymous",
-      "dateUpdated": "2020-06-03 12:40:21.245",
+      "dateUpdated": "2020-06-03 12:58:39.749",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -58,9 +58,7 @@
   "id": "2F9A1M54P",
   "noteParams": {},
   "noteForms": {},
-  "angularObjects": {
-    "spark:shared_process": []
-  },
+  "angularObjects": {},
   "config": {
     "isZeppelinNotebookCronEnable": false
   },
