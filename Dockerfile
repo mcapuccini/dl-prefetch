@@ -1,4 +1,4 @@
-# Start from ubuntu container
+# Start from datascience container
 FROM mcapuccini/datascience-stack:latest
 
 # Avoid warnings by switching to noninteractive
