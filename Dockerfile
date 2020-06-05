@@ -1,5 +1,5 @@
-# Start from ubuntu container
-FROM ubuntu:bionic
+# Base image
+FROM tensorflow/tensorflow:2.2.0-jupyter
 
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
