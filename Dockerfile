@@ -25,6 +25,9 @@ ENV LD_LIBRARY_PATH=${PARSECDIR}/pkgs/libs/hooks/inst/${PARSECPLAT}/lib
 RUN apt-get update \
     && apt-get -y install --no-install-recommends apt-utils dialog 2>&1 \
     #
+    # Install pip deps
+    && pip install pandas \
+    #
     # Install docker binary
     && curl -L https://download.docker.com/linux/static/stable/x86_64/docker-19.03.9.tgz | tar xvz docker/docker \
     && cp docker/docker /usr/local/bin \
