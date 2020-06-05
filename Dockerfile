@@ -25,6 +25,11 @@ ENV LD_LIBRARY_PATH=${PARSECDIR}/pkgs/libs/hooks/inst/${PARSECPLAT}/lib
 RUN apt-get update \
     && apt-get -y install --no-install-recommends apt-utils dialog 2>&1 \
     #
+    # Install docker binary
+    && curl -L https://download.docker.com/linux/static/stable/x86_64/docker-19.03.9.tgz | tar xvz docker/docker \
+    && cp docker/docker /usr/local/bin \
+    && rm -R docker \
+    #
     # Install apt deps
     && apt-get -y install \
     sudo \
@@ -32,6 +37,7 @@ RUN apt-get update \
     build-essential \
     curl \
     m4 \
+    openssh-client \
     && apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* \
