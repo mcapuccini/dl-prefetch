@@ -1,5 +1,5 @@
-# Start from datascience container
-FROM mcapuccini/datascience-stack:latest
+# Start from ubuntu container
+FROM ubuntu:bionic
 
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
@@ -45,7 +45,13 @@ RUN apt-get update \
     && ln -s $PIN_HOME/source/tools/ManualExamples/obj-intel64/*.so /usr/local/bin/ \
     #
     # Install PARSEC
-    && sh -c 'curl -L http://parsec.cs.princeton.edu/download/${PARSEC_VERSION}/parsec-${PARSEC_VERSION}-core.tar.gz | tar -xvz -C /opt'
+    && sh -c 'curl -L http://parsec.cs.princeton.edu/download/${PARSEC_VERSION}/parsec-${PARSEC_VERSION}-core.tar.gz | tar -xvz -C /opt' \
+    #
+    # Create a non-root user to use if preferred
+    && groupadd --gid $USER_GID $USERNAME \
+    && useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m $USERNAME \
+    && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
+    && chmod 0440 /etc/sudoers.d/$USERNAME
 
 # Copy code in the container
 COPY ./ /home/$USERNAME/dl-prefect/
