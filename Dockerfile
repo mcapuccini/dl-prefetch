@@ -27,8 +27,8 @@ RUN apt-get update \
     #
     # Install pip deps
     && pip install \
-    pandas \
-    dask[complete] \
+    pandas==1.0.4 \
+    dask[complete]==2.17.2 \
     #
     # Install docker binary
     && curl -L https://download.docker.com/linux/static/stable/x86_64/docker-19.03.9.tgz | tar xvz docker/docker \
