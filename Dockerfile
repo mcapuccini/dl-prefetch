@@ -21,6 +21,9 @@ ENV MANPATH=${MANPATH}:${PARSECDIR}/man
 ENV PARSECPLAT=${OSTYPE}-${HOSTTYPE}
 ENV LD_LIBRARY_PATH=${PARSECDIR}/pkgs/libs/hooks/inst/${PARSECPLAT}/lib
 
+# Java
+ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+
 # Configure apt
 RUN apt-get update \
     && apt-get -y install --no-install-recommends apt-utils dialog 2>&1 \
@@ -28,7 +31,7 @@ RUN apt-get update \
     # Install pip deps
     && pip install \
     pandas==1.0.4 \
-    dask[complete]==2.17.2 \
+    pyspark==2.4.6 \
     #
     # Install docker binary
     && curl -L https://download.docker.com/linux/static/stable/x86_64/docker-19.03.9.tgz | tar xvz docker/docker \
@@ -43,6 +46,7 @@ RUN apt-get update \
     curl \
     m4 \
     openssh-client \
+    openjdk-8-jdk \
     && apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* \
