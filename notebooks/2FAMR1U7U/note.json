@@ -1,0 +1,581 @@
+{
+  "paragraphs": [
+    {
+      "text": "%md\n**Base image:** mcapuccini/datascience-stack",
+      "user": "anonymous",
+      "dateUpdated": "2020-06-03 13:51:00.273",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003e\u003cstrong\u003eBase image:\u003c/strong\u003e mcapuccini/datascience-stack\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1591192205514_48914041",
+      "id": "20200603-135005_282808018",
+      "dateCreated": "2020-06-03 13:50:05.514",
+      "dateStarted": "2020-06-03 13:51:00.273",
+      "dateFinished": "2020-06-03 13:51:00.285",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sh\nls -lh /traces",
+      "user": "anonymous",
+      "dateUpdated": "2020-06-04 08:53:06.234",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "sh",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "editorMode": "ace/mode/sh"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "total 20G\ndrwxr-xr-x 2 root    root    4.0K Jun  4 07:23 canneal_test\n-rw-r--r-- 1 default default  20G May 28 11:54 canneal_test.6.0\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1591192076875_474817620",
+      "id": "20200603-134756_1355369653",
+      "dateCreated": "2020-06-03 13:47:56.875",
+      "dateStarted": "2020-06-04 08:53:06.256",
+      "dateFinished": "2020-06-04 08:53:07.315",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark\nimport org.apache.spark.mllib.rdd.RDDFunctions._\nimport scala.math.BigInt",
+      "user": "anonymous",
+      "dateUpdated": "2020-06-04 08:53:24.216",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "import org.apache.spark.mllib.rdd.RDDFunctions._\nimport scala.math.BigInt\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1591193729625_772665455",
+      "id": "20200603-141529_1310621870",
+      "dateCreated": "2020-06-03 14:15:29.625",
+      "dateStarted": "2020-06-04 08:53:24.249",
+      "dateFinished": "2020-06-04 08:53:33.225",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark\n// Load data\nval canneal \u003d sc.textFile(\"/traces/canneal_test.6.0\")",
+      "user": "anonymous",
+      "dateUpdated": "2020-06-04 08:53:43.224",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "canneal: org.apache.spark.rdd.RDD[String] \u003d /traces/canneal_test.6.0 MapPartitionsRDD[1] at textFile at \u003cconsole\u003e:30\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1591192272039_-349402450",
+      "id": "20200603-135112_409226274",
+      "dateCreated": "2020-06-03 13:51:12.039",
+      "dateStarted": "2020-06-04 08:53:43.249",
+      "dateFinished": "2020-06-04 08:53:44.069",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark\nsc.textFile(\"/traces/canneal_test/pinatrace.out\").count()",
+      "user": "anonymous",
+      "dateUpdated": "2020-06-04 09:00:38.483",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "res7: Long \u003d 1514551888\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1591261212815_742169659",
+      "id": "20200604-090012_418994482",
+      "dateCreated": "2020-06-04 09:00:12.815",
+      "dateStarted": "2020-06-04 09:00:38.497",
+      "dateFinished": "2020-06-04 09:01:39.151",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark\n// Count addresses\ncanneal.count()",
+      "user": "anonymous",
+      "dateUpdated": "2020-06-04 08:53:48.620",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "res1: Long \u003d 814902319\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1591192483468_-629035765",
+      "id": "20200603-135443_328626732",
+      "dateCreated": "2020-06-03 13:54:43.469",
+      "dateStarted": "2020-06-04 08:53:48.650",
+      "dateFinished": "2020-06-04 08:54:03.038",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark\n// Inspect a few records\ncanneal.take(10).foreach(println)",
+      "user": "anonymous",
+      "dateUpdated": "2020-06-04 08:54:07.031",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "7f7f623f6093 7fff5d6b9288\n7f7f623f6ea0 7fff5d6b9280\n7f7f623f6ea4 7fff5d6b9278\n7f7f623f6ea6 7fff5d6b9270\n7f7f623f6ea8 7fff5d6b9268\n7f7f623f6eaa 7fff5d6b9260\n7f7f623f6eaf 7fff5d6b9258\n7f7f623f6ebf 7f7f6261ce68\n7f7f623f6ec6 7f7f6261c720\n7f7f623f6ed7 7f7f6261d000\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1591192496819_2028430685",
+      "id": "20200603-135456_524474480",
+      "dateCreated": "2020-06-03 13:54:56.820",
+      "dateStarted": "2020-06-04 08:54:07.046",
+      "dateFinished": "2020-06-04 08:54:07.570",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark\n// Parse addresses\nval addresses \u003d canneal\n    .map(_.split(\" \")) // split string\n    .map(_(1)) // get address\n    .map(BigInt(_, 16)) // parse",
+      "user": "anonymous",
+      "dateUpdated": "2020-06-04 08:54:54.440",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "addresses: org.apache.spark.rdd.RDD[scala.math.BigInt] \u003d MapPartitionsRDD[4] at map at \u003cconsole\u003e:33\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1591192654123_232641487",
+      "id": "20200603-135734_1724334237",
+      "dateCreated": "2020-06-03 13:57:34.123",
+      "dateStarted": "2020-06-04 08:54:54.454",
+      "dateFinished": "2020-06-04 08:54:54.807",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark\n// Instpect a few addresses\naddresses.take(10).foreach(println)",
+      "user": "anonymous",
+      "dateUpdated": "2020-06-04 08:54:59.504",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "140734760718984\n140734760718976\n140734760718968\n140734760718960\n140734760718952\n140734760718944\n140734760718936\n140185088151144\n140185088149280\n140185088151552\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1591193488462_603181426",
+      "id": "20200603-141128_892342393",
+      "dateCreated": "2020-06-03 14:11:28.462",
+      "dateStarted": "2020-06-04 08:54:59.518",
+      "dateFinished": "2020-06-04 08:54:59.773",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark\n// Compute deltas\nval deltas \u003d addresses.sliding(2,2).map{ case Array(x,y) \u003d\u003e y - x }.cache()",
+      "user": "anonymous",
+      "dateUpdated": "2020-06-04 08:55:12.923",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "deltas: org.apache.spark.rdd.RDD[scala.math.BigInt] \u003d MapPartitionsRDD[6] at map at \u003cconsole\u003e:30\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1591193622531_93489043",
+      "id": "20200603-141342_1977993564",
+      "dateCreated": "2020-06-03 14:13:42.532",
+      "dateStarted": "2020-06-04 08:55:12.937",
+      "dateFinished": "2020-06-04 08:55:13.305",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark\n// Inspect a few deltas\ndeltas.take(5).foreach(println)",
+      "user": "anonymous",
+      "dateUpdated": "2020-06-04 08:55:17.441",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "-8\n-8\n-8\n-549672567792\n2272\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1591194502237_-1874915335",
+      "id": "20200603-142822_180802726",
+      "dateCreated": "2020-06-03 14:28:22.237",
+      "dateStarted": "2020-06-04 08:55:17.467",
+      "dateFinished": "2020-06-04 08:55:42.383",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark\n// Get min and max\nval minDelta \u003d deltas.min()\nval maxDelta \u003d deltas.max()",
+      "user": "anonymous",
+      "dateUpdated": "2020-06-04 08:57:33.469",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "minDelta: scala.math.BigInt \u003d -46820795377803\nmaxDelta: scala.math.BigInt \u003d 46820795375949\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1591194674386_-230875063",
+      "id": "20200603-143114_1690539487",
+      "dateCreated": "2020-06-03 14:31:14.387",
+      "dateStarted": "2020-06-04 08:57:33.484",
+      "dateFinished": "2020-06-04 08:59:55.693",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark\nminDelta \u003e Long.minValue() \nmaxDelta \u003e Long.maxValue()",
+      "user": "anonymous",
+      "dateUpdated": "2020-06-04 08:57:58.818",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u003cconsole\u003e:28: error: not found: value minDelta\n       minDelta \u003e Long.minValue()\n       ^\n\u003cconsole\u003e:28: error: value minValue is not a member of object Long\n       minDelta \u003e Long.minValue()\n                       ^\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1591261013905_980177519",
+      "id": "20200604-085653_1736103378",
+      "dateCreated": "2020-06-04 08:56:53.905",
+      "dateStarted": "2020-06-04 08:57:25.495",
+      "dateFinished": "2020-06-04 08:57:25.536",
+      "status": "ERROR",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark\n// Normalize\nnormalized_deltas \u003d deltas\n    .map()",
+      "user": "anonymous",
+      "dateUpdated": "2020-06-04 08:56:37.738",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "org.apache.spark.SparkException: Job aborted.\n  at org.apache.spark.internal.io.SparkHadoopWriter$.write(SparkHadoopWriter.scala:100)\n  at org.apache.spark.rdd.PairRDDFunctions$$anonfun$saveAsHadoopDataset$1.apply$mcV$sp(PairRDDFunctions.scala:1096)\n  at org.apache.spark.rdd.PairRDDFunctions$$anonfun$saveAsHadoopDataset$1.apply(PairRDDFunctions.scala:1094)\n  at org.apache.spark.rdd.PairRDDFunctions$$anonfun$saveAsHadoopDataset$1.apply(PairRDDFunctions.scala:1094)\n  at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151)\n  at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:112)\n  at org.apache.spark.rdd.RDD.withScope(RDD.scala:363)\n  at org.apache.spark.rdd.PairRDDFunctions.saveAsHadoopDataset(PairRDDFunctions.scala:1094)\n  at org.apache.spark.rdd.PairRDDFunctions$$anonfun$saveAsHadoopFile$4.apply$mcV$sp(PairRDDFunctions.scala:1067)\n  at org.apache.spark.rdd.PairRDDFunctions$$anonfun$saveAsHadoopFile$4.apply(PairRDDFunctions.scala:1032)\n  at org.apache.spark.rdd.PairRDDFunctions$$anonfun$saveAsHadoopFile$4.apply(PairRDDFunctions.scala:1032)\n  at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151)\n  at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:112)\n  at org.apache.spark.rdd.RDD.withScope(RDD.scala:363)\n  at org.apache.spark.rdd.PairRDDFunctions.saveAsHadoopFile(PairRDDFunctions.scala:1032)\n  at org.apache.spark.rdd.PairRDDFunctions$$anonfun$saveAsHadoopFile$1.apply$mcV$sp(PairRDDFunctions.scala:958)\n  at org.apache.spark.rdd.PairRDDFunctions$$anonfun$saveAsHadoopFile$1.apply(PairRDDFunctions.scala:958)\n  at org.apache.spark.rdd.PairRDDFunctions$$anonfun$saveAsHadoopFile$1.apply(PairRDDFunctions.scala:958)\n  at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151)\n  at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:112)\n  at org.apache.spark.rdd.RDD.withScope(RDD.scala:363)\n  at org.apache.spark.rdd.PairRDDFunctions.saveAsHadoopFile(PairRDDFunctions.scala:957)\n  at org.apache.spark.rdd.RDD$$anonfun$saveAsTextFile$1.apply$mcV$sp(RDD.scala:1499)\n  at org.apache.spark.rdd.RDD$$anonfun$saveAsTextFile$1.apply(RDD.scala:1478)\n  at org.apache.spark.rdd.RDD$$anonfun$saveAsTextFile$1.apply(RDD.scala:1478)\n  at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151)\n  at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:112)\n  at org.apache.spark.rdd.RDD.withScope(RDD.scala:363)\n  at org.apache.spark.rdd.RDD.saveAsTextFile(RDD.scala:1478)\n  ... 49 elided\nCaused by: org.apache.spark.SparkException: Job 19 cancelled part of cancelled job group zeppelin-anonymous-2FAMR1U7U-20200603-144001_1122017650\n  at org.apache.spark.scheduler.DAGScheduler.org$apache$spark$scheduler$DAGScheduler$$failJobAndIndependentStages(DAGScheduler.scala:1661)\n  at org.apache.spark.scheduler.DAGScheduler.handleJobCancellation(DAGScheduler.scala:1596)\n  at org.apache.spark.scheduler.DAGScheduler$$anonfun$handleJobGroupCancelled$1.apply$mcVI$sp(DAGScheduler.scala:811)\n  at org.apache.spark.scheduler.DAGScheduler$$anonfun$handleJobGroupCancelled$1.apply(DAGScheduler.scala:811)\n  at org.apache.spark.scheduler.DAGScheduler$$anonfun$handleJobGroupCancelled$1.apply(DAGScheduler.scala:811)\n  at scala.collection.mutable.HashSet.foreach(HashSet.scala:78)\n  at org.apache.spark.scheduler.DAGScheduler.handleJobGroupCancelled(DAGScheduler.scala:811)\n  at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.doOnReceive(DAGScheduler.scala:1851)\n  at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:1831)\n  at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:1820)\n  at org.apache.spark.util.EventLoop$$anon$1.run(EventLoop.scala:48)\n  at org.apache.spark.scheduler.DAGScheduler.runJob(DAGScheduler.scala:642)\n  at org.apache.spark.SparkContext.runJob(SparkContext.scala:2034)\n  at org.apache.spark.SparkContext.runJob(SparkContext.scala:2055)\n  at org.apache.spark.SparkContext.runJob(SparkContext.scala:2087)\n  at org.apache.spark.internal.io.SparkHadoopWriter$.write(SparkHadoopWriter.scala:78)\n  ... 77 more\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1591195201092_-1539700782",
+      "id": "20200603-144001_1122017650",
+      "dateCreated": "2020-06-03 14:40:01.092",
+      "dateStarted": "2020-06-03 14:44:50.299",
+      "dateFinished": "2020-06-03 14:46:23.712",
+      "status": "ABORT",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-06-03 14:44:50.284",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1591195490284_1546314275",
+      "id": "20200603-144450_5720027",
+      "dateCreated": "2020-06-03 14:44:50.284",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "Canneal",
+  "id": "2FAMR1U7U",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {
+    "md:shared_process": [],
+    "sh:shared_process": [],
+    "spark:shared_process": []
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}
