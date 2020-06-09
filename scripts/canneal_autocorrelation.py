@@ -52,7 +52,7 @@ def main(trace_path, out_path, spark_master, spark_driver_memory, spark_driver_m
         delayed(autocorrelation)(lag+1) for lag in range(500))
 
     # Save to disk
-    np.save(to_plot, out_path)
+    np.save(out_path, to_plot)
 
 
 if __name__ == "__main__":
@@ -60,11 +60,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--trace-path", required=True)
     parser.add_argument("--out-path", required=True)
-    parser.add_argument("--spark-master", default="local[*]", required=True)
-    parser.add_argument("--spark-driver-memory", default="100G", required=True)
-    parser.add_argument("--spark-driver-max-result-size",
-                        default="50G", required=True)
-    parser.add_argument("--n-jobs", default=10, required=True)
+    parser.add_argument("--spark-master", default="local[*]")
+    parser.add_argument("--spark-driver-memory", default="100G")
+    parser.add_argument("--spark-driver-max-result-size", default="50G")
+    parser.add_argument("--n-jobs", default=10, type=int)
     args = parser.parse_args()
 
     # Run
