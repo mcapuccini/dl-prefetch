@@ -33,6 +33,7 @@ RUN apt-get update \
     pandas==1.0.4 \
     pyspark==2.4.6 \
     pyarrow==0.17.1 \
+    joblib==0.15.1 \
     #
     # Install docker binary
     && curl -L https://download.docker.com/linux/static/stable/x86_64/docker-19.03.9.tgz | tar xvz docker/docker \
