@@ -16,7 +16,7 @@
 #include <stdio.h>
 #include "pin.H"
 #include <string>
-#include <iostream> 
+#include <iostream>
 
 const CHAR * ROI_BEGIN = "__parsec_roi_begin";
 const CHAR * ROI_END = "__parsec_roi_end";
@@ -44,7 +44,7 @@ VOID RecordMemRead(VOID * ip, VOID * addr, CHAR * rtn)
     }
 
     // Log memory access in CSV
-    fprintf(trace,"%p, R, %p, %s\n", ip, addr, rtn);
+    fprintf(trace,"%p,R,%p,%s\n", ip, addr, rtn);
 }
 
 // Print a memory write record
@@ -66,7 +66,7 @@ VOID RecordMemWrite(VOID * ip, VOID * addr, CHAR * rtn)
     }
 
     // Log memory access in CSV
-    fprintf(trace,"%p, W, %p, %s\n", ip, addr, rtn);
+    fprintf(trace,"%p,W,%p,%s\n", ip, addr, rtn);
 }
 
 // Set ROI flag
@@ -172,10 +172,14 @@ int main(int argc, char *argv[])
     // Initialize symbol table code, needed for rtn instrumentation
     PIN_InitSymbols();
 
+    // Usage
     if (PIN_Init(argc, argv)) return Usage();
 
-    trace = fopen("pinatrace.out", "w");
+    // Open trace file and write header
+    trace = fopen("roitrace.csv", "w");
+    fprintf(trace,"pc,rw,addr,rtn\n");
 
+    // Add instrument functions
     RTN_AddInstrumentFunction(Routine, 0);
     INS_AddInstrumentFunction(Instruction, 0);
     PIN_AddFiniFunction(Fini, 0);
