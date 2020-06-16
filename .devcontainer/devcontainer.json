@@ -1,6 +1,6 @@
 {
 	"name": "dl-prefetch",
-	"image": "mcapuccini/dl-prefetch",
+	"dockerFile": "../Dockerfile",
 	"remoteUser": "default",
 	"settings": { 
 		"terminal.integrated.shell.linux": "/bin/bash",

@@ -47,12 +47,9 @@ RUN apt-get update \
     && cp docker/docker /usr/local/bin \
     && rm -R docker \
     #
-    # Download pin and compile roitrace
+    # Install Pin
     && sh -c 'curl https://software.intel.com/sites/landingpage/pintool/downloads/pin-${PIN_VERSION}-gcc-linux.tar.gz | tar -xvz -C /opt' \
-    && make -C /tmp/src \
     && ln -s $PIN_HOME/pin /usr/local/bin \
-    && cp /tmp/src/obj-intel64/* /usr/local/bin \
-    && rm -r /tmp/src \
     #
     # Install PARSEC
     && sh -c 'curl -L http://parsec.cs.princeton.edu/download/${PARSEC_VERSION}/parsec-${PARSEC_VERSION}-core.tar.gz | tar -xvz -C /opt' \
@@ -76,8 +73,11 @@ RUN pip install \
 COPY ./ /home/$USERNAME/dl-prefect/
 RUN chown -R $USERNAME:$USERNAME /home/$USERNAME/dl-prefect/
 
-# Switch back to dialog for any ad-hoc use of apt-get
-ENV DEBIAN_FRONTEND=dialog
-
 # Set working directory
 WORKDIR /home/$USERNAME/dl-prefect/
+
+# Compile and install roitrace
+RUN make PIN_ROOT=${PIN_HOME} -C src && ln -s ${PWD}/src/obj-intel64/roitrace.so /usr/local/bin
+
+# Switch back to dialog for any ad-hoc use of apt-get
+ENV DEBIAN_FRONTEND=dialog
