@@ -8,7 +8,6 @@ services:
   - docker
 
 env:
-  - PARSEC_VERSION=3.0
   - TAG=latest
 
 script:
@@ -16,7 +15,6 @@ script:
   - >
     docker build 
     -t ${TRAVIS_REPO_SLUG}:${TAG}
-    --build-arg PARSEC_VERSION=${PARSEC_VERSION}
     --cache-from ${TRAVIS_REPO_SLUG}:${TAG}
     .
 after_success:
