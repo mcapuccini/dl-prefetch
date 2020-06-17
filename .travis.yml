@@ -8,13 +8,8 @@ services:
   - docker
 
 env:
-  matrix:
-    - >
-      PARSEC_VERSION=3.0
-      TAG=latest
-    - >
-      PARSEC_VERSION=2.1
-      TAG=parsec-2.1
+  - PARSEC_VERSION=3.0
+  - TAG=latest
 
 script:
   - docker pull ${TRAVIS_REPO_SLUG}:${TAG} || true
