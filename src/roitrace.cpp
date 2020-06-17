@@ -16,12 +16,9 @@
 #include <stdio.h>
 #include "pin.H"
 #include <string>
-#include <iostream>
 
 const CHAR * ROI_BEGIN = "__parsec_roi_begin";
 const CHAR * ROI_END = "__parsec_roi_end";
-const CHAR * ROI_BEGIN_PLT = "__parsec_roi_begin@plt";
-const CHAR * ROI_END_PLT = "__parsec_roi_end@plt";
 
 FILE * trace;
 bool isROI = false;
@@ -35,14 +32,6 @@ VOID RecordMemRead(VOID * ip, VOID * addr, CHAR * rtn)
         return;
     }
 
-    // Do not to trace ROI maker functions
-    if(strcmp(rtn, ROI_BEGIN) == 0 
-        || strcmp(rtn, ROI_END) == 0
-        || strcmp(rtn, ROI_BEGIN_PLT) == 0 
-        || strcmp(rtn, ROI_END_PLT) == 0) { 
-        return;
-    }
-
     // Log memory access in CSV
     fprintf(trace,"%p,R,%p,%s\n", ip, addr, rtn);
 }
@@ -50,18 +39,9 @@ VOID RecordMemRead(VOID * ip, VOID * addr, CHAR * rtn)
 // Print a memory write record
 VOID RecordMemWrite(VOID * ip, VOID * addr, CHAR * rtn)
 {
-
     // Return if not in ROI
     if(!isROI)
     {
-        return;
-    }
-
-    // Do not to trace ROI maker functions
-    if(strcmp(rtn, ROI_BEGIN) == 0 
-        || strcmp(rtn, ROI_END) == 0
-        || strcmp(rtn, ROI_BEGIN_PLT) == 0 
-        || strcmp(rtn, ROI_END_PLT) == 0) { // do not to trace ROI maker functions
         return;
     }
 
@@ -72,14 +52,12 @@ VOID RecordMemWrite(VOID * ip, VOID * addr, CHAR * rtn)
 // Set ROI flag
 VOID StartROI()
 {
-    std::cout << "[ROITRACE] Start ROI detected\n";
     isROI = true;
 }
 
 // Set ROI flag
 VOID StopROI()
 {
-    std::cout << "[ROITRACE] Stop ROI detected\n";
     isROI = false;
 }
 
