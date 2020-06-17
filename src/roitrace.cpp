@@ -117,7 +117,7 @@ VOID Routine(RTN rtn, VOID *v)
         RTN_InsertCall(rtn, IPOINT_AFTER, (AFUNPTR)StartROI, IARG_END);
         RTN_Close(rtn);
     } else if (strcmp(name,ROI_END) == 0) {
-        // Stop tracing before ROI begin exec
+        // Stop tracing before ROI end exec
         RTN_Open(rtn);
         RTN_InsertCall(rtn, IPOINT_BEFORE, (AFUNPTR)StopROI, IARG_END);
         RTN_Close(rtn);
