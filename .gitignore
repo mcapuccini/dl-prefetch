@@ -1,3 +1,4 @@
 .vscode
 **/.DS_Store
 src/obj-intel64
+bin/dirrc_*
