@@ -22,9 +22,6 @@ ENV MANPATH=${MANPATH}:${PARSECDIR}/man
 # Java
 ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 
-# Copy src folder (to compile)
-COPY ./src /tmp/src
-
 # Configure apt
 RUN apt-get update \
     && apt-get -y install --no-install-recommends apt-utils dialog 2>&1 \
