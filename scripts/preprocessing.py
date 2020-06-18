@@ -4,13 +4,6 @@ import argparse
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import PandasUDFType, col, pandas_udf
 
-
-# Helper
-@pandas_udf('long', PandasUDFType.SCALAR)
-def parse_hex(series):
-    return series.map(lambda x: int(x, base=16))
-
-
 def main(trace_path, out_dir, spark_master, spark_driver_memory, spark_driver_max_result_size, clip_size, test_dev_size):
     # Start Spark
     spark = SparkSession \
@@ -22,6 +15,9 @@ def main(trace_path, out_dir, spark_master, spark_driver_memory, spark_driver_ma
         .getOrCreate()
 
     # Load trace
+    @pandas_udf('long', PandasUDFType.SCALAR)
+    def parse_hex(series):
+        return series.map(lambda x: int(x, base=16))
     trace = spark.read \
         .format('csv') \
         .option('header', 'true') \
