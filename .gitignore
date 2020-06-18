@@ -1,4 +1,4 @@
 .vscode
 **/.DS_Store
 src/obj-intel64
-bin/dirrc_*
+bin/srvrc_*
