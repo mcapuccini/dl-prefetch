@@ -24,7 +24,7 @@ function run_autocorr {
 
 # Run
 run_autocorr "dev"
-docker logs "${TRACE_BENCH}_dev_autocorr"
+docker logs --follow "${TRACE_BENCH}_dev_autocorr"
 run_autocorr "test"
-docker logs "${TRACE_BENCH}_test_autocorr"
+docker logs --follow "${TRACE_BENCH}_test_autocorr"
 run_autocorr "train"
