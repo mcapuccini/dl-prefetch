@@ -6,4 +6,4 @@ export TRACE_CMD="/opt/parsec-3.0/pkgs/kernels/canneal/inst/amd64-linux.gcc-seri
 # TRACE_CMD="/opt/parsec-3.0/pkgs/kernels/canneal/inst/amd64-linux.gcc-serial/bin/canneal 1 10000 2000 /opt/parsec-3.0/pkgs/kernels/canneal/run/100000.nets 32" # simsmall
 
 # Run
-bin/preprocessing.sh
+bin/preproc.sh
