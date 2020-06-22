@@ -39,9 +39,9 @@ def main(trace_path, out_dir, spark_master, spark_driver_memory, spark_driver_ma
         .reset_index(drop=True)
 
     # Save as feather file
-    trace_train.to_feather(out_dir + '/traces/canneal/train.feather')
-    trace_test.to_feather(out_dir + '/traces/canneal/test.feather')
-    trace_dev.to_feather(out_dir + '/traces/canneal/dev.feather')
+    trace_train.to_feather(out_dir + '/train.feather')
+    trace_test.to_feather(out_dir + '/test.feather')
+    trace_dev.to_feather(out_dir + '/dev.feather')
 
 
 if __name__ == '__main__':
