@@ -22,11 +22,8 @@ dev_deltas = dev_addr[1:] - dev_addr[:-1]
 tr_unique, tr_count = np.unique(train_deltas, return_counts=True)
 tr_stacked = np.column_stack((tr_unique, tr_count))
 tr_unique_filtered = tr_stacked[tr_stacked[:, 1] >= 10][:, 0]
-
-# %% Set rare elements as max delta + 1
-dummy_delta = tr_unique_filtered.max() + 1
-train_deltas[~np.in1d(train_deltas, tr_unique_filtered)] = dummy_delta
-dev_deltas[~np.in1d(dev_deltas, tr_unique_filtered)] = dummy_delta
+print('Number of unique deltas:', len(tr_unique))
+print('Number of unique filtered deltas:', len(tr_unique_filtered))
 
 # %% Limit out deltas to 50K
 tr_most_common = tr_stacked[np.argsort(tr_stacked[:, 1])][-50000:][:, 0]
@@ -34,9 +31,10 @@ num_out_deltas = len(tr_most_common)
 print('Number of output deltas:', num_out_deltas)
 
 # %% Prepare ordinal encoders
+dummy_delta = tr_unique_filtered.max() + 1
 feature_enc = OrdinalEncoder()
 labels_enc = OrdinalEncoder()
-feature_enc.fit(train_deltas.reshape(-1, 1))
+feature_enc.fit(np.append(tr_unique_filtered, dummy_delta).reshape(-1, 1))
 labels_enc.fit(np.append(tr_most_common, dummy_delta).reshape(-1, 1))
 
 # %% Windowing and encoding data
@@ -47,14 +45,15 @@ def window_enc(series, look_back):
         to_ret.append(series[t:t+look_back+1].tolist())
     wdata = np.array(to_ret)
     # Get features and labels
-    features = wdata[:, :look_back]
-    labels = wdata[:, look_back]
-    # Replace unknown labels with dummy delta
-    labels[~np.in1d(labels, tr_most_common)] = dummy_delta
+    features = wdata[:, :look_back].reshape(-1, 1)
+    labels = wdata[:, look_back].reshape(-1, 1)
+    # Set dummy deltas
+    features[~np.in1d(features, tr_unique_filtered)] = dummy_delta # replace rare deltas from features
+    labels[~np.in1d(labels, tr_most_common)] = dummy_delta # replace deltas not included in out vocab
     # Ordinal encoding
-    features = feature_enc.transform(features.reshape(-1, 1))
-    labels = labels_enc.transform(labels.reshape(-1, 1))
-    return features.reshape(-1, look_back), to_categorical(labels.reshape(1, -1)[0])
+    features = feature_enc.transform(features)
+    labels = labels_enc.transform(labels)
+    return features.reshape(-1, look_back), to_categorical(labels.reshape(1, -1)[0], num_classes=num_out_deltas+1)
 
 look_back = 3
 train_x, train_y = window_enc(train_deltas, look_back)
