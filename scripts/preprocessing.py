@@ -4,7 +4,7 @@ import argparse
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import PandasUDFType, col, pandas_udf
 
-def main(trace_path, out_dir, spark_master, spark_driver_memory, spark_driver_max_result_size, clip_size, test_size):
+def main(trace_path, out_dir, spark_master, spark_driver_memory, spark_driver_max_result_size, test_size):
     # Start Spark
     spark = SparkSession \
         .builder \
@@ -47,10 +47,9 @@ if __name__ == '__main__':
     parser.add_argument('--spark-master', default='local[*]')
     parser.add_argument('--spark-driver-memory', default='100G')
     parser.add_argument('--spark-driver-max-result-size', default='50G')
-    parser.add_argument('--clip-size', default=100000, type=int)
     parser.add_argument('--test-size', default=500000, type=int)
     args = parser.parse_args()
 
     # Run
     main(args.trace_path, args.out_dir, args.spark_master, args.spark_driver_memory,
-         args.spark_driver_max_result_size, args.clip_size, args.test_size)
+         args.spark_driver_max_result_size, args.test_size)
