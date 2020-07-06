@@ -4,7 +4,7 @@ import argparse
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import PandasUDFType, col, pandas_udf
 
-def main(trace_path, out_dir, spark_master, spark_driver_memory, spark_driver_max_result_size, clip_size, test_dev_size):
+def main(trace_path, out_dir, spark_master, spark_driver_memory, spark_driver_max_result_size, clip_size, test_size):
     # Start Spark
     spark = SparkSession \
         .builder \
@@ -29,19 +29,14 @@ def main(trace_path, out_dir, spark_master, spark_driver_memory, spark_driver_ma
         .toPandas()
 
     # Train, test, dev split
-    trace_clip = trace[clip_size:][:-clip_size]\
+    trace_train = trace[:-test_size]\
         .reset_index(drop=True)
-    trace_train = trace_clip[:-(test_dev_size*2)]\
-        .reset_index(drop=True)
-    trace_test = trace_clip[-test_dev_size:]\
-        .reset_index(drop=True)
-    trace_dev = trace_clip[:-test_dev_size][-test_dev_size:]\
+    trace_test = trace[-test_size:]\
         .reset_index(drop=True)
 
     # Save as feather file
     trace_train.to_feather(out_dir + '/train.feather')
     trace_test.to_feather(out_dir + '/test.feather')
-    trace_dev.to_feather(out_dir + '/dev.feather')
 
 
 if __name__ == '__main__':
@@ -53,9 +48,9 @@ if __name__ == '__main__':
     parser.add_argument('--spark-driver-memory', default='100G')
     parser.add_argument('--spark-driver-max-result-size', default='50G')
     parser.add_argument('--clip-size', default=100000, type=int)
-    parser.add_argument('--test-dev-size', default=500000, type=int)
+    parser.add_argument('--test-size', default=500000, type=int)
     args = parser.parse_args()
 
     # Run
     main(args.trace_path, args.out_dir, args.spark_master, args.spark_driver_memory,
-         args.spark_driver_max_result_size, args.clip_size, args.test_dev_size)
+         args.spark_driver_max_result_size, args.clip_size, args.test_size)
