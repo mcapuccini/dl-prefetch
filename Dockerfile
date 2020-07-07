@@ -39,6 +39,9 @@ RUN apt-get update \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* \
     #
+    # Install Jupyter
+    conda install jupyter \
+    #
     # Install docker binary
     && curl -L https://download.docker.com/linux/static/stable/x86_64/docker-19.03.9.tgz | tar xvz docker/docker \
     && cp docker/docker /usr/local/bin \
