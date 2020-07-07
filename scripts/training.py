@@ -1,11 +1,8 @@
 # %% Imports
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import OrdinalEncoder
-from tensorflow.keras.layers import LSTM, Dense, Dropout, Embedding, Input
-from tensorflow.keras.models import Model
-from tensorflow.keras.utils import to_categorical
+from torch import nn, optim
 
 # %% Load data
 trace_df = pd.read_feather('/traces/canneal/train.feather')
@@ -39,53 +36,52 @@ labels_enc.fit(np.append(tr_most_common, dummy_delta).reshape(-1, 1))
 
 # %% Windowing and encoding data
 def window_enc(series, look_back):
-    # Windowing the series
-    to_ret = []
-    for t in range(len(series) - look_back):
-        to_ret.append(series[t:t+look_back+1].tolist())
-    wdata = np.array(to_ret)
-    # Get features and labels
-    features = wdata[:, :look_back].reshape(-1, 1)
-    labels = wdata[:, look_back].reshape(-1, 1)
-    # Set dummy deltas
-    features[~np.in1d(features, tr_unique_filtered)] = dummy_delta # replace rare deltas from features
-    labels[~np.in1d(labels, tr_most_common)] = dummy_delta # replace deltas not included in out vocab
-    # Ordinal encoding
-    features = feature_enc.transform(features)
-    labels = labels_enc.transform(labels)
-    return features.reshape(-1, look_back), to_categorical(labels.reshape(1, -1)[0], num_classes=num_out_deltas+1)
+  # Windowing the series
+  to_ret = []
+  for t in range(len(series) - look_back):
+      to_ret.append(series[t:t+look_back+1].tolist())
+  wdata = np.array(to_ret)
+  # Get features and labels
+  features = wdata[:, :look_back].reshape(-1, 1)
+  labels = wdata[:, look_back].reshape(-1, 1)
+  # Set dummy deltas
+  features[~np.in1d(features, tr_unique_filtered)] = dummy_delta # replace rare deltas from features
+  labels[~np.in1d(labels, tr_most_common)] = dummy_delta # replace deltas not included in out vocab
+  # Ordinal encoding
+  features = feature_enc.transform(features)
+  labels = labels_enc.transform(labels)
+  return features.reshape(-1, look_back), to_categorical(labels.reshape(1, -1)[0], num_classes=num_out_deltas+1)
 
 look_back = 3
 train_x, train_y = window_enc(train_deltas, look_back)
 dev_x, dev_y = window_enc(dev_deltas, look_back)
 
 # %% Define model architecture
-i = Input(shape=(look_back,))
-x = Embedding(int(train_x.max()) + 1, 10, input_length=look_back)(i)
-x = LSTM(50)(x)
-x = Dropout(0.1)(x)
-x = Dense(num_out_deltas+1, activation='softmax')(x)
-
-# %% Compile model
-model = Model(i, x)
-model.compile(loss='categorical_crossentropy',
-              optimizer='adam', metrics=['accuracy'])
-
+class Model(nn.Module):
+  def __init__(self):
+    super(Model, self).__init__()
+    self.embedding = nn.Embedding(
+      num_embeddings=int(train_x.max()) + 1,
+      embedding_dim=10,
+    )
+    self.lstm = nn.LSTM(
+        input_size=look_back,
+        hidden_size=50,
+        batch_first=True)
+    self.dropout = nn.Dropout(p=0.1)
+    self.linear = nn.Linear(
+      in_features=50,
+      out_features=num_out_deltas+1
+    )
+  def forward(self, x):
+    out = self.embedding(x)
+    out, _ = self.lstm(out) # h0, c0 default to 0
+    out = self.dropout(out[:, -1, :]) # [:, -1, :] slices out the last hidden state
+    out = self.linear(out)
+    return out
+  
 # %% Train
-r = model.fit(
-    train_x, train_y, 
-    validation_data=(dev_x, dev_y),
-    epochs=20,
-    shuffle=False,
-    batch_size=256
-)
-
-# %% Plot loss
-plt.plot(r.history['loss'], label='loss')
-plt.plot(r.history['val_loss'], label='val_loss')
-plt.legend()
-
-# %% Plot accuracy
-plt.plot(r.history['accuracy'], label='acc')
-plt.plot(r.history['val_accuracy'], label='val_acc')
-plt.legend()
+epochs=20
+criterion = nn.CrossEntropyLoss()
+model = Model()
+optimizer = optim.Adam(model.parameters())

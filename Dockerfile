@@ -1,5 +1,5 @@
 # Base image
-FROM tensorflow/tensorflow:2.2.0-jupyter
+FROM pytorch/pytorch:1.5.1-cuda10.1-cudnn7-runtime
 
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
