@@ -39,9 +39,6 @@ RUN apt-get update \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* \
     #
-    # Install Jupyter
-    conda install jupyter \
-    #
     # Install docker binary
     && curl -L https://download.docker.com/linux/static/stable/x86_64/docker-19.03.9.tgz | tar xvz docker/docker \
     && cp docker/docker /usr/local/bin \
@@ -68,7 +65,8 @@ RUN pip install \
     joblib==0.15.1 \
     pylint==2.5.3 \
     autopep8==1.5.3 \
-    scikit-learn==0.23.1
+    scikit-learn==0.23.1 \
+    jupyter==1.0.0
 
 # Copy code in the container
 COPY ./ /home/$USERNAME/dl-prefect/
