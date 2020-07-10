@@ -43,6 +43,9 @@ RUN apt-get update \
     && curl -L https://download.docker.com/linux/static/stable/x86_64/docker-19.03.9.tgz | tar xvz docker/docker \
     && cp docker/docker /usr/local/bin \
     && rm -R docker \
+    # 
+    # Install Spark
+    && pip install --disable-pip-version-check --no-cache-dir pyspark==2.4.6 \
     #
     # Install Pin
     && sh -c 'curl https://software.intel.com/sites/landingpage/pintool/downloads/pin-${PIN_VERSION}-gcc-linux.tar.gz | tar -xvz -C /opt' \
@@ -58,15 +61,15 @@ RUN apt-get update \
     && chmod 0440 /etc/sudoers.d/$USERNAME
 
 # Install pip deps
-RUN pip install \
+RUN pip install --disable-pip-version-check --no-cache-dir \
     pandas==1.0.4 \
-    pyspark==2.4.6 \
     pyarrow==0.17.1 \
     joblib==0.15.1 \
     pylint==2.5.3 \
     autopep8==1.5.3 \
     scikit-learn==0.23.1 \
-    jupyter==1.0.0
+    jupyter==1.0.0 \
+    matplotlib==3.2.2
 
 # Copy code in the container
 COPY ./ /home/$USERNAME/dl-prefect/
