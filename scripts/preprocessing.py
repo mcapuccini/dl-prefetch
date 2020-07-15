@@ -4,6 +4,7 @@ import argparse
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import PandasUDFType, col, pandas_udf
 
+
 def main(trace_path, out_dir, spark_master, spark_driver_memory, spark_driver_max_result_size, test_size):
     # Start Spark
     spark = SparkSession \
