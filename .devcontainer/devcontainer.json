@@ -7,7 +7,8 @@
 		"python.pythonPath": "/opt/conda/bin/python",
 		"python.linting.pylintPath": "/opt/conda/bin/pylint",
 		"python.linting.pylintEnabled": true,
-		"python.linting.enabled": true
+		"python.linting.enabled": true,
+		"python.formatting.provider": "yapf"
 	},
 	"extensions": [
 		"ms-azuretools.vscode-docker",

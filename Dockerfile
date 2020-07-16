@@ -66,7 +66,7 @@ RUN pip install --disable-pip-version-check --no-cache-dir \
     pyarrow==0.17.1 \
     joblib==0.15.1 \
     pylint==2.5.3 \
-    autopep8==1.5.3 \
+    yapf==0.30.0 \
     scikit-learn==0.23.1 \
     jupyter==1.0.0 \
     matplotlib==3.2.2
