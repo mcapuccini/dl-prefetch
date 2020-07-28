@@ -35,6 +35,7 @@ RUN apt-get update \
     m4 \
     openssh-client \
     openjdk-8-jdk \
+    libssl-dev \
     && apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* \
