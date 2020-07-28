@@ -1,6 +1,7 @@
 # Imports
 import os
 import sys
+import uuid
 import warnings
 from datetime import datetime, timedelta
 
@@ -77,12 +78,13 @@ def training(
   batch_size,
 ):
   # Make out dir
-  os.mkdir(out_dir) # this will fail if dir exists
+  full_out_dir = f'{out_dir}/{uuid.uuid4().hex}'
+  os.makedirs(full_out_dir)
 
   # Print out and save parameters
   parameters = {}
   parameters['train_set_path'] = train_set_path
-  parameters['out_dir'] = out_dir
+  parameters['out_dir'] = full_out_dir
   parameters['train_set_size'] = train_set_size
   parameters['dev_set_size'] = dev_set_size
   parameters['skip_size'] = skip_size
@@ -95,7 +97,7 @@ def training(
   parameters['n_epochs'] = n_epochs
   parameters['batch_size'] = batch_size
   parameters_df = pd.DataFrame(parameters, index=['Parameters']).transpose()
-  parameters_df.to_csv(f'{out_dir}/parameters.csv')
+  parameters_df.to_csv(f'{full_out_dir}/parameters.csv')
   print(parameters_df)
 
   # Load and split data
@@ -131,8 +133,8 @@ def training(
   labels_enc = OrdinalEncoder()
   feature_enc.fit(np.append(tr_unique_filtered, dummy_delta).reshape(-1, 1))
   labels_enc.fit(np.append(tr_most_common, dummy_delta).reshape(-1, 1))
-  joblib.dump(feature_enc, f'{out_dir}/feature_enc.joblib.gz', compress='gzip')
-  joblib.dump(labels_enc, f'{out_dir}/labels_enc.joblib.gz', compress='gzip')
+  joblib.dump(feature_enc, f'{full_out_dir}/feature_enc.joblib.gz', compress='gzip')
+  joblib.dump(labels_enc, f'{full_out_dir}/labels_enc.joblib.gz', compress='gzip')
 
   # Encoding and widowing
   def window_enc(series):
@@ -162,10 +164,10 @@ def training(
 
   train_x, train_y, df_tr, dl_tr = window_enc(train_deltas)
   dev_x, dev_y, df_dev, dl_dev = window_enc(dev_deltas)
-  torch.save(train_x, f'{out_dir}/train_x.pth')
-  torch.save(train_y, f'{out_dir}/train_y.pth')
-  torch.save(dev_x, f'{out_dir}/dev_x.pth')
-  torch.save(dev_y, f'{out_dir}/dev_y.pth')
+  torch.save(train_x, f'{full_out_dir}/train_x.pth')
+  torch.save(train_y, f'{full_out_dir}/train_y.pth')
+  torch.save(dev_x, f'{full_out_dir}/dev_x.pth')
+  torch.save(dev_y, f'{full_out_dir}/dev_y.pth')
   print(f'Dummy features fraction in train set: {df_tr:.4f})')
   print(f'Dummy labels fraction in train set: {dl_tr:.4f})')
   print(f'Dummy features fraction in dev set: {df_dev:.4f})')
@@ -238,9 +240,9 @@ def training(
             f'(eval duration {eval_duration})')
 
   # Save model, history and last predictions
-  torch.save(model, f'{out_dir}/model.pth')
+  torch.save(model, f'{full_out_dir}/model.pth')
   np.savez_compressed(
-    f'{out_dir}/history.npz',
+    f'{full_out_dir}/history.npz',
     tr_loss_h=tr_loss_h,
     tr_acc_h=tr_acc_h,
     tr_bal_acc_h=tr_bal_acc_h,
@@ -248,12 +250,12 @@ def training(
     dev_acc_h=dev_acc_h,
     dev_bal_acc_h=dev_bal_acc_h,
   )
-  torch.save(dev_pred, f'{out_dir}/dev_pred.pth')
+  torch.save(dev_pred, f'{full_out_dir}/dev_pred.pth')
 
   # Compute/Save/Print classification report
   report = classification_report(dev_y, dev_pred, output_dict=True)
   report_df = pd.DataFrame(report).transpose().drop('accuracy')
-  report_df.to_csv(f'{out_dir}/report_df.csv.gz', compression='gzip')
+  report_df.to_csv(f'{full_out_dir}/report_df.csv.gz', compression='gzip')
   print(report_df)
 
   # Compute/Save/Print metrics DF
@@ -268,7 +270,7 @@ def training(
   metrics['dev dummy feature fract'] = df_dev
   metrics['dev dummy labels fract'] = dl_dev
   metrics_df = pd.DataFrame(metrics, index=['Metrics']).transpose()
-  metrics_df.to_csv(f'{out_dir}/metrics_df.csv')
+  metrics_df.to_csv(f'{full_out_dir}/metrics_df.csv')
   print(metrics_df)
 
 if __name__ == '__main__':

@@ -41,11 +41,9 @@ def preprocessing(
       .drop(col('addr')) \
       .toPandas()
 
-  # Train, test, dev split
-  trace_train = trace[:-test_size]\
-      .reset_index(drop=True)
-  trace_test = trace[-test_size:]\
-      .reset_index(drop=True)
+  # Train, test split
+  trace_train = trace[:-test_size].reset_index(drop=True)
+  trace_test = trace[-test_size:].reset_index(drop=True)
 
   # Save as feather file
   trace_train.to_feather(out_dir + '/train.feather')

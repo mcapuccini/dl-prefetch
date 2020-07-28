@@ -2,3 +2,4 @@
 **/.DS_Store
 src/obj-intel64
 rc
+data/**/out

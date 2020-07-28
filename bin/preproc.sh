@@ -18,4 +18,5 @@ docker run -d \
     mcapuccini/dl-prefetch \
     python scripts/preprocessing.py \
     --trace-path /traces/${TRACE_BENCH}/roitrace.csv \
-    --out-dir /traces/${TRACE_BENCH}
+    --out-dir /traces/${TRACE_BENCH} \
+    ${@:1} # other args if passed
