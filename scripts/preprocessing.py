@@ -1,10 +1,23 @@
 # Imports
-import argparse
-
+import click
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import PandasUDFType, col, pandas_udf
 
-def main(trace_path, out_dir, spark_master, spark_driver_memory, spark_driver_max_result_size, test_size):
+@click.command()
+@click.option('--trace-path', required=True)
+@click.option('--out-dir', required=True)
+@click.option('--spark-master', default='local[*]')
+@click.option('--spark-driver-memory', default='100G')
+@click.option('--spark-driver-max-result-size', default='50G')
+@click.option('--test-size', default=500000, type=int)
+def preprocessing(
+  trace_path,
+  out_dir,
+  spark_master,
+  spark_driver_memory,
+  spark_driver_max_result_size,
+  test_size,
+):
   # Start Spark
   spark = SparkSession \
       .builder \
@@ -39,16 +52,4 @@ def main(trace_path, out_dir, spark_master, spark_driver_memory, spark_driver_ma
   trace_test.to_feather(out_dir + '/test.feather')
 
 if __name__ == '__main__':
-  # Parse arguments
-  parser = argparse.ArgumentParser()
-  parser.add_argument('--trace-path', required=True)
-  parser.add_argument('--out-dir', required=True)
-  parser.add_argument('--spark-master', default='local[*]')
-  parser.add_argument('--spark-driver-memory', default='100G')
-  parser.add_argument('--spark-driver-max-result-size', default='50G')
-  parser.add_argument('--test-size', default=500000, type=int)
-  args = parser.parse_args()
-
-  # Run
-  main(args.trace_path, args.out_dir, args.spark_master, args.spark_driver_memory, args.spark_driver_max_result_size,
-       args.test_size)
+  preprocessing() # pylint: disable=no-value-for-parameter

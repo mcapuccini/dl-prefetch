@@ -1,10 +1,10 @@
 # Imports
-import argparse
 import os
 import sys
 import warnings
 from datetime import datetime, timedelta
 
+import click
 import joblib
 import numpy as np
 import pandas as pd
@@ -47,15 +47,29 @@ class Model(nn.Module):
     out = self.linear(out)
     return out
 
-def main(
+@click.command()
+@click.option('--train-set-path', required=True)
+@click.option('--out-dir', required=True)
+@click.option('--train-set-size', default=None, type=int)
+@click.option('--dev-set-size', default=500000, type=int)
+@click.option('--skip-size', default=0, type=int)
+@click.option('--occurrence-thr', default=10, type=int)
+@click.option('--max-out-deltas', default=50000, type=int)
+@click.option('--look-back', default=3, type=int)
+@click.option('--embedding-dim', default=10, type=int)
+@click.option('--lstm-hidden-size', default=50, type=int)
+@click.option('--dropout-p', default=0.1, type=float)
+@click.option('--n-epochs', default=20, type=int)
+@click.option('--batch-size', default=256, type=int)
+def training(
   train_set_path,
+  out_dir,
   train_set_size,
   dev_set_size,
   skip_size,
   occurrence_thr,
   max_out_deltas,
   look_back,
-  out_dir,
   embedding_dim,
   lstm_hidden_size,
   dropout_p,
@@ -258,37 +272,4 @@ def main(
   print(metrics_df)
 
 if __name__ == '__main__':
-  # Parse arguments
-  parser = argparse.ArgumentParser()
-  # Defauls are memsys-like
-  parser.add_argument('--train-set-path', required=True)
-  parser.add_argument('--out-dir', required=True)
-  parser.add_argument('--train-set-size', default=None, type=int)
-  parser.add_argument('--dev-set-size', default=500000, type=int)
-  parser.add_argument('--skip-size', default=0, type=int)
-  parser.add_argument('--occurrence-thr', default=10, type=int)
-  parser.add_argument('--max-out-deltas', default=50000, type=int)
-  parser.add_argument('--look-back', default=3, type=int)
-  parser.add_argument('--embedding-dim', default=10, type=int)
-  parser.add_argument('--lstm-hidden-size', default=50, type=int)
-  parser.add_argument('--dropout-p', default=0.1, type=float)
-  parser.add_argument('--n-epochs', default=20, type=int)
-  parser.add_argument('--batch-size', default=256, type=int)
-  args = parser.parse_args()
-
-  # Run
-  main(
-    args.train_set_path,
-    args.train_set_size,
-    args.dev_set_size,
-    args.skip_size,
-    args.occurrence_thr,
-    args.max_out_deltas,
-    args.look_back,
-    args.out_dir,
-    args.embedding_dim,
-    args.lstm_hidden_size,
-    args.dropout_p,
-    args.n_epochs,
-    args.batch_size,
-  )
+  training() # pylint: disable=no-value-for-parameter

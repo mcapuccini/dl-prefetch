@@ -69,7 +69,8 @@ RUN pip install --disable-pip-version-check --no-cache-dir \
     yapf==0.30.0 \
     scikit-learn==0.23.1 \
     jupyter==1.0.0 \
-    matplotlib==3.2.2
+    matplotlib==3.2.2 \
+    click==7.1.2
 
 # Copy code in the container
 COPY ./ /home/$USERNAME/dl-prefect/
