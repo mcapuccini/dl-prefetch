@@ -37,6 +37,7 @@ RUN apt-get update \
     openjdk-8-jdk \
     libssl-dev \
     libxext-dev \
+    libxmu-headers \
     && apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* \
