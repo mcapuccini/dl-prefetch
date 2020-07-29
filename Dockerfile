@@ -36,6 +36,7 @@ RUN apt-get update \
     openssh-client \
     openjdk-8-jdk \
     libssl-dev \
+    libxext-dev \
     && apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* \
