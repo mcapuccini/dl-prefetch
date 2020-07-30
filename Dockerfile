@@ -38,7 +38,7 @@ RUN apt-get update \
     libssl-dev \
     libxext-dev \
     libxmu-headers \
-    libx11-dev \
+    && ln -s /usr/include/X11/extensions/XI.h /usr/include/X11/extensions/XInput.h \
     && apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* \
