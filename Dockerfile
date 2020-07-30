@@ -39,6 +39,9 @@ RUN apt-get update \
     libxext-dev \
     libxmu-headers \
     libxi-dev \
+    libxmu-dev \
+    pkg-config \
+    gettext \
     && apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* \
