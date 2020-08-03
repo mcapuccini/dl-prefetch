@@ -4,7 +4,7 @@ import click
 
 from preprocessing import preprocessing
 
-@click.command()
+@click.command('preprocess_many')
 @click.option('--traces-path', required=True)
 @click.option('--spark-master', default='local[*]')
 @click.option('--spark-driver-memory', default='100G')
