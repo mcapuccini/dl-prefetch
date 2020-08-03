@@ -3,7 +3,7 @@ import click
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import PandasUDFType, col, pandas_udf
 
-@click.command('preprocessing')
+@click.command()
 @click.option('--trace-path', required=True)
 @click.option('--out-dir', required=True)
 @click.option('--spark-master', default='local[*]')

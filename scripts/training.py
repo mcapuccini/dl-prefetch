@@ -48,7 +48,7 @@ class Model(nn.Module):
     out = self.linear(out)
     return out
 
-@click.command('training')
+@click.command()
 @click.option('--train-set-path', required=True)
 @click.option('--out-dir', required=True)
 @click.option('--train-set-size', default=None, type=int)

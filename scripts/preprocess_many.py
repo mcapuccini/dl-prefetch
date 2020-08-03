@@ -4,13 +4,15 @@ import click
 
 from preprocessing import preprocessing
 
-@click.command('preprocess_many')
+@click.command()
 @click.option('--traces-path', required=True)
 @click.option('--spark-master', default='local[*]')
 @click.option('--spark-driver-memory', default='100G')
 @click.option('--spark-driver-max-result-size', default='50G')
 @click.option('--test-size', default=500000, type=int)
+@click.pass_context
 def preprocess_many(
+  ctx,
   traces_path,
   spark_master,
   spark_driver_memory,
@@ -24,13 +26,14 @@ def preprocess_many(
     if not trace_dir.joinpath('train.feather').exists() and \
       not trace_dir.joinpath('test.feather').exists():
       print(f'Preprocessing {str(trace_dir)} ...')
-      preprocessing(
-        trace_path,
-        trace_path,
-        spark_master,
-        spark_driver_memory,
-        spark_driver_max_result_size,
-        test_size,
+      ctx.invoke(
+        preprocessing,
+        trace_path=str(trace_dir),
+        out_dir=str(trace_dir),
+        spark_master=spark_master,
+        spark_driver_memory=spark_driver_memory,
+        spark_driver_max_result_size=spark_driver_max_result_size,
+        test_size=test_size,
       )
     else:
       print(f'Skipping {str(trace_dir)}')
