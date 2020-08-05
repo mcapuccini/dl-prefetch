@@ -24,7 +24,7 @@ FILE * trace;
 bool isROI = false;
 
 // Print a memory read record
-VOID RecordMemRead(VOID * ip, VOID * addr, CHAR * rtn)
+VOID RecordMemAcc(VOID * addr)
 {
     // Return if not in ROI
     if(!isROI)
@@ -32,21 +32,8 @@ VOID RecordMemRead(VOID * ip, VOID * addr, CHAR * rtn)
         return;
     }
 
-    // Log memory access in CSV
-    fprintf(trace,"%p,R,%p,%s\n", ip, addr, rtn);
-}
-
-// Print a memory write record
-VOID RecordMemWrite(VOID * ip, VOID * addr, CHAR * rtn)
-{
-    // Return if not in ROI
-    if(!isROI)
-    {
-        return;
-    }
-
-    // Log memory access in CSV
-    fprintf(trace,"%p,W,%p,%s\n", ip, addr, rtn);
+    // Log memory access binary
+    fwrite(&addr, sizeof(VOID *), 1, trace);
 }
 
 // Set ROI flag
@@ -74,34 +61,10 @@ VOID Instruction(INS ins, VOID *v)
     // Iterate over each memory operand of the instruction.
     for (UINT32 memOp = 0; memOp < memOperands; memOp++)
     {
-        // Get routine name if valid
-        const CHAR * name = "invalid";
-        if(RTN_Valid(INS_Rtn(ins))) 
-        {
-            name = RTN_Name(INS_Rtn(ins)).c_str();
-        }
-
-        if (INS_MemoryOperandIsRead(ins, memOp))
-        {
-            INS_InsertPredicatedCall(
-                ins, IPOINT_BEFORE, (AFUNPTR)RecordMemRead,
-                IARG_INST_PTR,
-                IARG_MEMORYOP_EA, memOp,
-                IARG_ADDRINT, name,
-                IARG_END);
-        }
-        // Note that in some architectures a single memory operand can be 
-        // both read and written (for instance incl (%eax) on IA-32)
-        // In that case we instrument it once for read and once for write.
-        if (INS_MemoryOperandIsWritten(ins, memOp))
-        {
-            INS_InsertPredicatedCall(
-                ins, IPOINT_BEFORE, (AFUNPTR)RecordMemWrite,
-                IARG_INST_PTR,
-                IARG_MEMORYOP_EA, memOp,
-                IARG_ADDRINT, name,
-                IARG_END);
-        }
+        INS_InsertPredicatedCall(
+            ins, IPOINT_BEFORE, (AFUNPTR)RecordMemAcc,
+            IARG_MEMORYOP_EA, memOp,
+            IARG_END);
     }
 }
 
@@ -153,9 +116,8 @@ int main(int argc, char *argv[])
     // Usage
     if (PIN_Init(argc, argv)) return Usage();
 
-    // Open trace file and write header
-    trace = fopen("roitrace.csv", "w");
-    fprintf(trace,"pc,rw,addr,rtn\n");
+    // Open trace file
+    trace = fopen("roitrace.bin", "wb");
 
     // Add instrument functions
     RTN_AddInstrumentFunction(Routine, 0);

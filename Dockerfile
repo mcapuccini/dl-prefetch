@@ -19,9 +19,6 @@ ENV PARSECDIR=/opt/parsec-${PARSEC_VERSION}
 ENV PATH=${PATH}:${PARSECDIR}/bin
 ENV MANPATH=${MANPATH}:${PARSECDIR}/man
 
-# Java
-ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
-
 # Configure apt
 RUN apt-get update \
     && apt-get -y install --no-install-recommends apt-utils dialog 2>&1 \
@@ -34,7 +31,6 @@ RUN apt-get update \
     curl \
     m4 \
     openssh-client \
-    openjdk-8-jdk \
     libssl-dev \
     libxext-dev \
     libxmu-headers \
@@ -50,9 +46,6 @@ RUN apt-get update \
     && curl -L https://download.docker.com/linux/static/stable/x86_64/docker-19.03.9.tgz | tar xvz docker/docker \
     && cp docker/docker /usr/local/bin \
     && rm -R docker \
-    # 
-    # Install Spark
-    && pip install --disable-pip-version-check --no-cache-dir pyspark==2.4.6 \
     #
     # Install Pin
     && sh -c 'curl https://software.intel.com/sites/landingpage/pintool/downloads/pin-${PIN_VERSION}-gcc-linux.tar.gz | tar -xvz -C /opt' \
