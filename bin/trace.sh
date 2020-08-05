@@ -20,7 +20,7 @@ fi
 
 # Run roitrace
 docker run -d \
-    --name $TRACE_BENCH \
+    --name ${TRACE_BENCH}_trace \
     -v ${TRACE_OUTDIR}/${TRACE_BENCH}:/out \
     -v $TRACE_PARSECDIR:/opt/parsec-3.0 \
     -e LD_LIBRARY_PATH=/opt/parsec-3.0/pkgs/libs/hooks/inst/amd64-linux.gcc-serial/lib \
