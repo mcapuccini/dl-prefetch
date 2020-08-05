@@ -14,9 +14,9 @@ if [ -z "$TRACE_PARSECDIR" ]; then
     exit 1
 fi
 
-# Run roitrace (output in /opt/parsec-3.0/pkgs/apps/facesim/run/roitrace.csv)
+# Run roitrace (output in /opt/parsec-3.0/pkgs/apps/facesim/run/)
 docker run -d \
-    --name $TRACE_BENCH \
+    --name ${TRACE_BENCH}_facesim \
     -v $TRACE_PARSECDIR:/opt/parsec-3.0 \
     -e LD_LIBRARY_PATH=/opt/parsec-3.0/pkgs/libs/hooks/inst/amd64-linux.gcc-serial/lib \
     --security-opt seccomp=unconfined \
