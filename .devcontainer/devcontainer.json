@@ -16,6 +16,7 @@
 	],
 	"mounts": [
 		"source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/default/.ssh,type=bind,consistency=default",
-		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind,consistency=default"
+		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind,consistency=default",
+		"source=${localEnv:HOME}${localEnv:USERPROFILE}/parsec-3.0,target=/opt/parsec-3.0,type=bind,consistency=default"
 	]
 }

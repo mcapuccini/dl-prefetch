@@ -1,26 +1,14 @@
-/*
- * Copyright 2002-2019 Intel Corporation.
- * 
- * This software is provided to you as Sample Source Code as defined in the accompanying
- * End User License Agreement for the Intel(R) Software Development Products ("Agreement")
- * section 1.L.
- * 
- * This software and the related documents are provided as is, with no express or implied
- * warranties, other than those that are expressly stated in the License.
- */
-
-/*
- *  This file contains an ISA-portable PIN tool for tracing memory accesses with a few mods for tracing PARSEC
- */
-
 #include <stdio.h>
 #include "pin.H"
 #include <string>
+
+KNOB<BOOL> KnobEmitText(KNOB_MODE_WRITEONCE, "pintool", "text", "0", "emit the trace in text format");
 
 const CHAR * ROI_BEGIN = "__parsec_roi_begin";
 const CHAR * ROI_END = "__parsec_roi_end";
 
 FILE * trace;
+FILE * textTrace;
 bool isROI = false;
 
 // Print a memory read record
@@ -34,6 +22,12 @@ VOID RecordMemAcc(VOID * addr)
 
     // Log memory access binary
     fwrite(&addr, sizeof(VOID *), 1, trace);
+
+    // Log memory access text
+    if(KnobEmitText) {
+        fprintf(textTrace,"%p\n", addr);
+    }
+
 }
 
 // Set ROI flag
@@ -91,6 +85,9 @@ VOID Routine(RTN rtn, VOID *v)
 VOID Fini(INT32 code, VOID *v)
 {
     fclose(trace);
+    if(KnobEmitText) {
+        fclose(textTrace);
+    }
 }
 
 /* ===================================================================== */
@@ -116,8 +113,11 @@ int main(int argc, char *argv[])
     // Usage
     if (PIN_Init(argc, argv)) return Usage();
 
-    // Open trace file
+    // Open trace files
     trace = fopen("roitrace.bin", "wb");
+    if(KnobEmitText) {
+        textTrace = fopen("roitrace.txt", "w");
+    }
 
     // Add instrument functions
     RTN_AddInstrumentFunction(Routine, 0);
