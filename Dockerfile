@@ -19,6 +19,9 @@ ENV PARSECDIR=/opt/parsec-${PARSEC_VERSION}
 ENV PATH=${PATH}:${PARSECDIR}/bin
 ENV MANPATH=${MANPATH}:${PARSECDIR}/man
 
+# Java
+ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+
 # Configure apt
 RUN apt-get update \
     && apt-get -y install --no-install-recommends apt-utils dialog 2>&1 \
@@ -53,6 +56,9 @@ RUN apt-get update \
     #
     # Install PARSEC
     && sh -c 'curl -L http://parsec.cs.princeton.edu/download/${PARSEC_VERSION}/parsec-${PARSEC_VERSION}-core.tar.gz | tar -xvz -C /opt' \
+    # 
+    # Install Spark
+    && pip install --disable-pip-version-check --no-cache-dir pyspark==2.4.6 \
     #
     # Create a non-root user to use if preferred
     && groupadd --gid $USER_GID $USERNAME \
@@ -70,7 +76,8 @@ RUN pip install --disable-pip-version-check --no-cache-dir \
     jupyter==1.0.0 \
     matplotlib==3.2.2 \
     click==7.1.2 \
-    debugpy==1.0.0b12
+    debugpy==1.0.0b12 \
+    joblib==0.15.1
 
 # Copy code in the container
 COPY ./ /home/$USERNAME/dl-prefect/
