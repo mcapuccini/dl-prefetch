@@ -2,7 +2,7 @@
 
 # Set env
 export TRACE_BENCH="facesim"
-export TRACE_CMD="/opt/parsec-3.0/pkgs/apps/facesim/inst/amd64-linux.gcc-serial/bin/facesim -timing -threads 1" # simlarge
+export TRACE_CMD="/opt/parsec-3.0/pkgs/apps/facesim/inst/amd64-linux.gcc-serial/bin/facesim -timing -threads 1" # simsmall
 
 # Check env
 if [ -z "$TRACE_OUTDIR" ]; then 

@@ -6,7 +6,8 @@
 # Set env
 export TRACE_BENCH="vips"
 input_base="/opt/parsec-2.1/pkgs/apps/vips/run"
-export TRACE_CMD="/opt/parsec-2.1/pkgs/apps/vips/inst/amd64-linux.gcc-serial/bin/vips im_benchmark $input_base/vulture_2336x2336.v $input_base/output.v" # simmedium
+# export TRACE_CMD="/opt/parsec-2.1/pkgs/apps/vips/inst/amd64-linux.gcc-serial/bin/vips im_benchmark $input_base/vulture_2336x2336.v $input_base/output.v" # simmedium
+export TRACE_CMD="/opt/parsec-2.1/pkgs/apps/vips/inst/amd64-linux.gcc-serial/bin/vips im_benchmark $input_base/pomegranate_1600x1200.v $input_base/output.v" # simsmall
 
 # Check env
 if [ -z "$TRACE_OUTDIR" ]; then 
