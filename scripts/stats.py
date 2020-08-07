@@ -32,6 +32,7 @@ def stats(dataset_dir, n_bins):
   stats['unique deltas'] = len(delta_unique)
   stats['rare deltas (< 10)'] = len(rare_deltas)
   stats['unique deltas (no rare)'] = len(delta_unique) - len(rare_deltas)
+  stats['deltas (no rare)'] = len(trace) - rare_deltas.sum() - 1
   stats['deltas 50% mass'] = ceil(len(delta_unique) / 2)
   stats['deltas 50K coverage'] = 50000 / len(delta_unique)
 
