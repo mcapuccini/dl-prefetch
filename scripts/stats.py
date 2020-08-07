@@ -15,9 +15,10 @@ def stats(dataset_dir, n_bins):
   trace = np.fromfile(f'{dataset_dir}/roitrace.bin', dtype=np.int64)
   deltas = trace[1:] - trace[:-1]
 
-  # Plot
-  trace_hist = plt.hist(trace, bins=100)
-  deltas_hist = plt.hist(deltas, bins=100)
+  # Plots
+  fig, axs = plt.subplots(ncols=2)
+  axs[0].hist(trace, bins=100)
+  axs[1].hist(deltas, bins=100)
 
   # Compute unique addr/deltas
   addr_unique = np.unique(trace)
@@ -36,8 +37,7 @@ def stats(dataset_dir, n_bins):
 
   # Save
   pd.DataFrame(stats, index=['stats']).transpose().to_csv(f'{dataset_dir}/stats.csv')
-  pickle.dump(trace_hist, open(f'{dataset_dir}/trace_hist_{n_bins}.pickle', 'wb'))
-  pickle.dump(deltas_hist, open(f'{dataset_dir}/deltas_hist_{n_bins}.pickle', 'wb'))
+  pickle.dump(fig, open(f'{dataset_dir}/hist_{n_bins}.pickle', 'wb'))
 
 if __name__ == '__main__':
   stats() # pylint: disable=no-value-for-parameter
