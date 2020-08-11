@@ -8,11 +8,12 @@ const CHAR * ROI_BEGIN = "__parsec_roi_begin";
 const CHAR * ROI_END = "__parsec_roi_end";
 
 FILE * trace;
+FILE * pc;
 FILE * textTrace;
 bool isROI = false;
 
 // Print a memory read record
-VOID RecordMemAcc(VOID * addr)
+VOID RecordMemAcc(VOID * addr, VOID * ip)
 {
     // Return if not in ROI
     if(!isROI)
@@ -22,10 +23,11 @@ VOID RecordMemAcc(VOID * addr)
 
     // Log memory access binary
     fwrite(&addr, sizeof(VOID *), 1, trace);
+    fwrite(&ip, sizeof(VOID *), 1, pc);
 
     // Log memory access text
     if(KnobEmitText) {
-        fprintf(textTrace,"%p\n", addr);
+        fprintf(textTrace,"%p,%p\n", addr, ip);
     }
 
 }
@@ -58,6 +60,7 @@ VOID Instruction(INS ins, VOID *v)
         INS_InsertPredicatedCall(
             ins, IPOINT_BEFORE, (AFUNPTR)RecordMemAcc,
             IARG_MEMORYOP_EA, memOp,
+            IARG_INST_PTR,
             IARG_END);
     }
 }
@@ -85,6 +88,7 @@ VOID Routine(RTN rtn, VOID *v)
 VOID Fini(INT32 code, VOID *v)
 {
     fclose(trace);
+    fclose(pc);
     if(KnobEmitText) {
         fclose(textTrace);
     }
@@ -115,6 +119,7 @@ int main(int argc, char *argv[])
 
     // Open trace files
     trace = fopen("roitrace.bin", "wb");
+    pc = fopen("pc.bin", "wb");
     if(KnobEmitText) {
         textTrace = fopen("roitrace.txt", "w");
     }
