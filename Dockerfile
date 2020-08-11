@@ -77,7 +77,8 @@ RUN pip install --disable-pip-version-check --no-cache-dir \
     matplotlib==3.2.2 \
     click==7.1.2 \
     debugpy==1.0.0b12 \
-    joblib==0.15.1
+    joblib==0.15.1 \
+    pycachesim==0.2.2
 
 # Copy code in the container
 COPY ./ /home/$USERNAME/dl-prefect/
