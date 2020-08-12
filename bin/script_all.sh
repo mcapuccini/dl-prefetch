@@ -6,6 +6,13 @@ if [ -z "$TRACE_OUTDIR" ]; then
     exit 1
 fi
 
+# Args
+if [ $# -lt 1 ]; then
+    echo "Not enough arguments"
+    exit 1
+fi
+script_cmd="${@:1}"
+
 # Benchmarks
 benchmarks="
   blackscholes
@@ -23,7 +30,7 @@ benchmarks="
   x264
 "
 
-# Run stats
+# Run script
 for trace_bench in $benchmarks; do
-  TRACE_BENCH=$trace_bench bin/stats.sh
+  TRACE_BENCH=$trace_bench bin/script.sh $script_cmd
 done

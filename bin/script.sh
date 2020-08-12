@@ -10,9 +10,16 @@ if [ -z "$TRACE_BENCH" ]; then
     exit 1
 fi
 
+# Args
+if [ $# -lt 1 ]; then
+    echo "Not enough arguments"
+    exit 1
+fi
+script_cmd="${@:1}"
+
 # Run stats
 docker run -d \
-  --name ${TRACE_BENCH}_stats \
+  --name ${script_cmd%% *}_${TRACE_BENCH} \
   -v ${TRACE_OUTDIR}:/traces \
   mcapuccini/dl-prefetch sh -c \
-  "python scripts/stats.py --dataset-dir /traces/${TRACE_BENCH}"
+  "python scripts/$script_cmd --dataset-dir /traces/${TRACE_BENCH}"
