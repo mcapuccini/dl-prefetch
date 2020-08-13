@@ -42,12 +42,22 @@ def preproc_stats(dataset_dir, grid_size):
   misses = data_with_dt[data_with_dt.miss]
 
   # Plot
-  _, ax = plt.subplots(ncols=2, nrows=2, sharex='col', sharey='row', figsize=(7, 8))
-  ax[0, 0].hexbin(data_with_dt.index, data_with_dt['addr'], gridsize=grid_size, cmap='inferno', bins='log')
-  ax[0, 1].hexbin(misses.index, misses['addr'], gridsize=grid_size, cmap='inferno', bins='log')
-  ax[1, 0].hexbin(data_with_dt.index, data_with_dt['delta'], gridsize=grid_size, cmap='inferno', bins='log')
-  ax[1, 1].hexbin(misses.index, misses['delta'], gridsize=grid_size, cmap='inferno', bins='log')
-  pickle.dump(ax, open(f'{dataset_dir}/hexbins.pickle', 'wb'))
+  fig, ax = plt.subplots(ncols=2, nrows=2, sharex='col', sharey='row', figsize=(7, 8))
+  hb = ax[0, 0].hexbin(data_with_dt.index, data_with_dt['addr'], gridsize=grid_size, cmap='inferno', bins='log')
+  fig.colorbar(hb, ax=ax[0, 0])
+  hb = ax[0, 1].hexbin(misses.index, misses['addr'], gridsize=grid_size, cmap='inferno', bins='log')
+  fig.colorbar(hb, ax=ax[0, 1])
+  hb = ax[1, 0].hexbin(data_with_dt.index, data_with_dt['delta'], gridsize=grid_size, cmap='inferno', bins='log')
+  fig.colorbar(hb, ax=ax[1, 0])
+  hb = ax[1, 1].hexbin(misses.index, misses['delta'], gridsize=grid_size, cmap='inferno', bins='log')
+  fig.colorbar(hb, ax=ax[1, 1])
+  ax[1,0].set_xlabel('Access Number')
+  ax[1,1].set_xlabel('Access Number')
+  ax[0,0].set_ylabel('Address')
+  ax[0,1].set_ylabel('Missed Address')
+  ax[1,0].set_ylabel('Delta')
+  ax[1,1].set_ylabel('Missed Delta')
+  pickle.dump(fig, open(f'{dataset_dir}/hexbins.pickle', 'wb'))
 
   # Stats DF
   raw_stats = stats_dict(data_with_dt['addr'].to_numpy(), data_with_dt['delta'].to_numpy())
