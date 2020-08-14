@@ -51,25 +51,23 @@ def preproc_misses(dataset_dir):
   cs = CacheSimulator(first_level=l1, main_memory=mem)
 
   # Load data
-  trace = np.fromfile(f'{dataset_dir}/roitrace.bin', dtype=np.int64)
-  pc = np.fromfile(f'{dataset_dir}/pc.bin', dtype=np.int64)
+  trace_df = pd.read_feather(f'{dataset_dir}/trace.feather')
+  trace = trace_df['addr'].to_numpy()
 
   # Run simulation and track misses
   miss = np.zeros(len(trace), dtype=np.bool_)
   miss_count = 0
   for i in trange(len(trace), desc='cache simulator'):
     cs.load(trace[i])
-    if (l1.MISS_count > miss_count):
+    if (l3.MISS_count > miss_count):
       miss[i] = True
       miss_count += 1
-      assert (miss_count == l1.MISS_count)
-  assert (miss.sum() == l1.MISS_count)
+      assert (miss_count == l3.MISS_count)
+  assert (miss.sum() == l3.MISS_count)
 
   # Store
-  to_store = pd.DataFrame(trace, columns=['addr'])
-  to_store['pc'] = pc
-  to_store['miss'] = miss
-  to_store.to_feather(f'{dataset_dir}/trace_with_miss.feather')
+  trace_df['miss'] = miss
+  trace_df.to_feather(f'{dataset_dir}/trace_with_miss.feather')
 
 if __name__ == '__main__':
   preproc_misses() # pylint: disable=no-value-for-parameter

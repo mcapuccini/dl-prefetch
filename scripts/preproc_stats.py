@@ -1,11 +1,9 @@
 # Imports
-import pickle
 from math import ceil
 
 import click
 import numpy as np
 import pandas as pd
-from matplotlib import pyplot as plt
 
 pd.options.mode.chained_assignment = None
 
@@ -14,7 +12,6 @@ def stats_dict(trace, deltas):
   addr_unique = np.unique(trace)
   delta_unique, delta_counts = np.unique(deltas, return_counts=True)
   rare_deltas = delta_counts[delta_counts < 10]
-
   # Stats
   stats = {}
   stats['len'] = len(trace)
@@ -29,39 +26,36 @@ def stats_dict(trace, deltas):
 
 @click.command()
 @click.option('--dataset-dir', required=True)
-@click.option('--grid-size', default=50, type=int)
-def preproc_stats(dataset_dir, grid_size):
+@click.option('--bins', default=100, type=int)
+def preproc_stats(dataset_dir, bins):
   # Load data
   data = pd.read_feather(f'{dataset_dir}/trace_with_miss.feather')
-  deltas = data['addr'][1:].to_numpy() - data['addr'][:-1].to_numpy()
-  data_with_dt = data[1:]
-  data_with_dt['delta'] = deltas
-  data_with_dt = data_with_dt.reset_index()
+  addr = data['addr'].to_numpy()
+  deltas = data['deltas'].to_numpy()
+  misses = data['miss'].to_numpy()
 
-  # Filter misses
-  misses = data_with_dt[data_with_dt.miss]
+  # Compute histograms
+  time_addr = np.histogram2d(range(len(addr)), addr, bins=bins)
+  time_dt = np.histogram2d(range(len(deltas)), deltas, bins=bins)
 
-  # Plot
-  fig, ax = plt.subplots(ncols=2, nrows=2, sharex='col', sharey='row', figsize=(7, 8))
-  hb = ax[0, 0].hexbin(data_with_dt.index, data_with_dt['addr'], gridsize=grid_size, cmap='inferno', bins='log')
-  fig.colorbar(hb, ax=ax[0, 0])
-  hb = ax[0, 1].hexbin(misses.index, misses['addr'], gridsize=grid_size, cmap='inferno', bins='log')
-  fig.colorbar(hb, ax=ax[0, 1])
-  hb = ax[1, 0].hexbin(data_with_dt.index, data_with_dt['delta'], gridsize=grid_size, cmap='inferno', bins='log')
-  fig.colorbar(hb, ax=ax[1, 0])
-  hb = ax[1, 1].hexbin(misses.index, misses['delta'], gridsize=grid_size, cmap='inferno', bins='log')
-  fig.colorbar(hb, ax=ax[1, 1])
-  ax[1,0].set_xlabel('Access Number')
-  ax[1,1].set_xlabel('Access Number')
-  ax[0,0].set_ylabel('Address')
-  ax[0,1].set_ylabel('Missed Address')
-  ax[1,0].set_ylabel('Delta')
-  ax[1,1].set_ylabel('Missed Delta')
-  pickle.dump(fig, open(f'{dataset_dir}/hexbins.pickle', 'wb'))
+  misses_idx = np.where(misses)[0]
+  addr_misses = addr[misses]
+  time_addr_miss = np.histogram2d(misses_idx, addr_misses, bins=bins)
 
-  # Stats DF
-  raw_stats = stats_dict(data_with_dt['addr'].to_numpy(), data_with_dt['delta'].to_numpy())
-  misses_stats = stats_dict(misses['addr'].to_numpy(), misses['delta'].to_numpy())
+  deltas_misses = deltas[misses]
+  time_dt_miss = np.histogram2d(misses_idx, deltas_misses, bins=bins)
+
+  np.savez(
+    f'{dataset_dir}/histograms.npz',
+    time_addr=time_addr,
+    time_dt=time_dt,
+    time_addr_miss=time_addr_miss,
+    time_dt_miss=time_dt_miss,
+  )
+
+  # Compute stats
+  raw_stats = stats_dict(addr, deltas)
+  misses_stats = stats_dict(addr_misses, deltas_misses)
   raw_stats_df = pd.DataFrame(raw_stats, index=['raw']).transpose()
   misses_stats_df = pd.DataFrame(misses_stats, index=['miss']).transpose()
   stats_df = pd.concat([raw_stats_df, misses_stats_df], axis=1)
