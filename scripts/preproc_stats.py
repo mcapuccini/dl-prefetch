@@ -36,31 +36,30 @@ def stats_dict(trace, deltas):
 @click.command()
 @click.option('--dataset-dir', required=True)
 @click.option('--bins', default=100, type=int)
-def preproc_stats(dataset_dir, bins):
+@click.option('--histograms/--no-histograms', default=True)
+def preproc_stats(dataset_dir, bins, histograms):
   # Load data
   data = pd.read_feather(f'{dataset_dir}/trace_with_miss.feather')
   addr = data['addr'].to_numpy()
   deltas = data['deltas'].to_numpy()
   misses = data['miss'].to_numpy()
-
-  # Compute histograms
-  time_addr = np.histogram2d(range(len(addr)), addr, bins=bins)
-  time_dt = np.histogram2d(range(len(deltas)), deltas, bins=bins)
-
   misses_idx = np.where(misses)[0]
   addr_misses = addr[misses]
-  time_addr_miss = np.histogram2d(misses_idx, addr_misses, bins=bins)
-
   deltas_misses = deltas[misses]
-  time_dt_miss = np.histogram2d(misses_idx, deltas_misses, bins=bins)
 
-  np.savez(
-    f'{dataset_dir}/histograms.npz',
-    time_addr=time_addr,
-    time_dt=time_dt,
-    time_addr_miss=time_addr_miss,
-    time_dt_miss=time_dt_miss,
-  )
+  # Compute histograms
+  if(histograms):
+    time_addr = np.histogram2d(range(len(addr)), addr, bins=bins)
+    time_dt = np.histogram2d(range(len(deltas)), deltas, bins=bins)
+    time_addr_miss = np.histogram2d(misses_idx, addr_misses, bins=bins)
+    time_dt_miss = np.histogram2d(misses_idx, deltas_misses, bins=bins)
+    np.savez(
+      f'{dataset_dir}/histograms.npz',
+      time_addr=time_addr,
+      time_dt=time_dt,
+      time_addr_miss=time_addr_miss,
+      time_dt_miss=time_dt_miss,
+    )
 
   # Compute stats
   raw_stats = stats_dict(addr, deltas)
