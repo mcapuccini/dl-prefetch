@@ -5,10 +5,15 @@ import pandas as pd
 
 @click.command()
 @click.option('--dataset-dir', required=True)
-def preproc_feather(dataset_dir):
+@click.option('--limit/--no-limit', default=False)
+def preproc_feather(dataset_dir, limit):
   # Load data and compute deltas
-  trace = np.fromfile(f'{dataset_dir}/roitrace.bin', dtype=np.int64)
-  pc = np.fromfile(f'{dataset_dir}/pc.bin', dtype=np.int64)
+  if limit:
+    count=int(1e9)
+  else:
+    count=-1
+  trace = np.fromfile(f'{dataset_dir}/roitrace.bin', dtype=np.int64, count=count)
+  pc = np.fromfile(f'{dataset_dir}/pc.bin', dtype=np.int64, count=count)
   deltas = trace[1:] - trace[:-1]
   # Store as feather
   to_store = pd.DataFrame(trace[1:], columns=['addr'])
