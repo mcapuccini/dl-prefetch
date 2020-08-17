@@ -1,17 +1,27 @@
 # Imports
-from math import ceil
-
 import click
 import numpy as np
 import pandas as pd
 
 pd.options.mode.chained_assignment = None
 
+def mass_50(counts):
+  thr = counts.sum() / 2
+  acc = 0
+  mass = 0
+  for x in counts:
+    mass += 1
+    acc += x
+    if acc >= thr:
+      return mass
+  return mass
+
 def stats_dict(trace, deltas):
   # Compute unique addr/deltas
   addr_unique = np.unique(trace)
   delta_unique, delta_counts = np.unique(deltas, return_counts=True)
   rare_deltas = delta_counts[delta_counts < 10]
+  half_mass = mass_50(delta_counts)
   # Stats
   stats = {}
   stats['len'] = len(trace)
@@ -20,8 +30,8 @@ def stats_dict(trace, deltas):
   stats['rare deltas (< 10)'] = len(rare_deltas)
   stats['unique deltas (no rare)'] = len(delta_unique) - len(rare_deltas)
   stats['rare deltas fract'] = rare_deltas.sum() / len(trace)
-  stats['deltas 50% mass'] = ceil(len(delta_unique) / 2)
-  stats['deltas 50K coverage'] = 50000 / len(delta_unique)
+  stats['deltas 50% mass'] = half_mass
+  stats['deltas 50K coverage'] = 50000 / half_mass
   return stats
 
 @click.command()
