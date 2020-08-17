@@ -21,7 +21,6 @@ def stats_dict(trace, deltas):
   addr_unique = np.unique(trace)
   delta_unique, delta_counts = np.unique(deltas, return_counts=True)
   rare_deltas = delta_counts[delta_counts < 10]
-  half_mass = mass_50(delta_counts)
   # Stats
   stats = {}
   stats['len'] = len(trace)
@@ -30,8 +29,8 @@ def stats_dict(trace, deltas):
   stats['rare deltas (< 10)'] = len(rare_deltas)
   stats['unique deltas (no rare)'] = len(delta_unique) - len(rare_deltas)
   stats['rare deltas fract'] = rare_deltas.sum() / len(trace)
-  stats['deltas 50% mass'] = half_mass
-  stats['deltas 50K coverage'] = 50000 / half_mass
+  stats['deltas 50% mass'] = mass_50(delta_counts)
+  stats['deltas 50K coverage'] = delta_counts[:50000].sum() / len(trace)
   return stats
 
 @click.command()
