@@ -4,6 +4,6 @@ unique addr,863.0,156.0
 unique deltas,352.0,77.0
 rare deltas (< 10),329.0,76.0
 unique deltas (no rare),23.0,1.0
-rare deltas fract,0.840370018975332,0.4935897435897436
-deltas 50% mass,176.0,39.0
-deltas 50K coverage,142.04545454545453,649.3506493506494
+rare deltas fract,0.15962998102466794,0.5064102564102564
+deltas 50% mass,166.0,51.0
+deltas 50K coverage,1.0,1.0
