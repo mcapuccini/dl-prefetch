@@ -40,13 +40,13 @@ def stats_dict(trace, deltas):
 @click.option('--histograms/--no-histograms', default=True)
 def preproc_stats(dataset_dir, bins, histograms):
   # Load data
-  data = pd.read_feather(f'{dataset_dir}/trace_with_miss.feather')
+  data = pd.read_feather(f'{dataset_dir}/trace_with_deltas.feather')
   addr = data['addr'].to_numpy()
-  deltas = data['deltas'].to_numpy()
+  deltas = data['delta'].to_numpy()
   misses = data['miss'].to_numpy()
   misses_idx = np.where(misses)[0]
   addr_misses = addr[misses]
-  deltas_misses = deltas[misses]
+  deltas_misses = data['delta_miss'][misses].to_numpy()
 
   # Compute histograms
   if(histograms):
