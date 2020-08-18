@@ -27,7 +27,7 @@ def stats_dict(trace, deltas):
   stats['len'] = len(trace)
   stats['unique addr'] = len(addr_unique)
   stats['unique deltas'] = len(delta_unique)
-  stats['rare deltas (< 10)'] = len(rare_deltas)
+  stats['unique rare deltas (< 10)'] = len(rare_deltas)
   stats['unique deltas (no rare)'] = len(delta_unique) - len(rare_deltas)
   stats['rare deltas fract'] = rare_deltas.sum() / len(trace)
   stats['deltas 50% mass'] = mass_50(delta_counts)
