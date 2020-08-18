@@ -20,6 +20,7 @@ def stats_dict(trace, deltas):
   # Compute unique addr/deltas
   addr_unique = np.unique(trace)
   delta_unique, delta_counts = np.unique(deltas, return_counts=True)
+  delta_counts[::-1].sort() # sort from most frequent to least frequent
   rare_deltas = delta_counts[delta_counts < 10]
   # Stats
   stats = {}
