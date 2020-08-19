@@ -19,7 +19,7 @@ def stats_dict(trace, deltas):
   stats['unique rare deltas (< 10)'] = len(rare_deltas)
   stats['unique deltas (no rare)'] = len(delta_unique) - len(rare_deltas)
   stats['rare deltas fract'] = rare_deltas.sum() / len(trace)
-  stats['deltas 50% mass'] = (delta_counts.cumsum() < (delta_counts.sum() / 2)).sum()
+  stats['deltas 50% mass'] = (delta_counts.cumsum() < (len(deltas) / 2)).sum()
   stats['deltas 50K coverage'] = delta_counts[:50000].sum() / len(trace)
   return stats
 
