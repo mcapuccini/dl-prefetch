@@ -5,17 +5,6 @@ import pandas as pd
 
 pd.options.mode.chained_assignment = None
 
-def mass_50(counts):
-  thr = counts.sum() / 2
-  acc = 0
-  mass = 0
-  for x in counts:
-    mass += 1
-    acc += x
-    if acc >= thr:
-      return mass
-  return mass
-
 def stats_dict(trace, deltas):
   # Compute unique addr/deltas
   addr_unique = np.unique(trace)
@@ -30,7 +19,7 @@ def stats_dict(trace, deltas):
   stats['unique rare deltas (< 10)'] = len(rare_deltas)
   stats['unique deltas (no rare)'] = len(delta_unique) - len(rare_deltas)
   stats['rare deltas fract'] = rare_deltas.sum() / len(trace)
-  stats['deltas 50% mass'] = mass_50(delta_counts)
+  stats['deltas 50% mass'] = (delta_counts.cumsum() < (delta_counts.sum() / 2)).sum()
   stats['deltas 50K coverage'] = delta_counts[:50000].sum() / len(trace)
   return stats
 
