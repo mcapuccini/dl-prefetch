@@ -10,17 +10,27 @@ def stats_dict(trace, deltas):
   addr_unique = np.unique(trace)
   delta_unique, delta_counts = np.unique(deltas, return_counts=True)
   delta_counts[::-1].sort() # sort from most frequent to least frequent
-  rare_deltas = delta_counts[delta_counts < 10]
+  
   # Stats
   stats = {}
-  stats['len'] = len(trace)
+  stats['trace len'] = len(trace)
   stats['unique addr'] = len(addr_unique)
   stats['unique deltas'] = len(delta_unique)
-  stats['unique rare deltas (< 10)'] = len(rare_deltas)
-  stats['unique deltas (no rare)'] = len(delta_unique) - len(rare_deltas)
-  stats['rare deltas fract'] = rare_deltas.sum() / len(trace)
-  stats['deltas 50% mass'] = (delta_counts.cumsum() < (len(deltas) / 2)).sum()
+
+  # 50 mass and 50K coverage
+  delta_50_mass = (delta_counts.cumsum() < (len(deltas) / 2)).sum() + 1 
+  stats['deltas 50% mass'] = delta_50_mass
   stats['deltas 50K coverage'] = delta_counts[:50000].sum() / len(trace)
+
+  # Rare deltas < 10
+  rare_deltas = delta_counts[delta_counts < 10]
+  rare_deltas_sum = rare_deltas.sum()
+  stats['rare deltas (< 10)'] = rare_deltas_sum
+  stats['rare deltas fract'] = rare_deltas_sum / len(trace)
+  stats['unique rare deltas'] = len(rare_deltas)
+  stats['unique rare deltas fract'] = (len(delta_unique) - len(rare_deltas)) / len(rare_deltas)
+  stats['unique deltas (no rare)'] = len(delta_unique) - len(rare_deltas)
+  
   return stats
 
 @click.command()
