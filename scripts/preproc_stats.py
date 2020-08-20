@@ -10,7 +10,7 @@ def stats_dict(trace, deltas):
   addr_unique = np.unique(trace)
   delta_unique, delta_counts = np.unique(deltas, return_counts=True)
   delta_counts[::-1].sort() # sort from most frequent to least frequent
-  
+
   # Stats
   stats = {}
   stats['trace len'] = len(trace)
@@ -18,7 +18,7 @@ def stats_dict(trace, deltas):
   stats['unique deltas'] = len(delta_unique)
 
   # 50 mass and 50K coverage
-  delta_50_mass = (delta_counts.cumsum() < (len(deltas) / 2)).sum() + 1 
+  delta_50_mass = (delta_counts.cumsum() < (len(deltas) / 2)).sum() + 1
   stats['deltas 50% mass'] = delta_50_mass
   stats['deltas 50K coverage'] = delta_counts[:50000].sum() / len(trace)
 
@@ -30,7 +30,7 @@ def stats_dict(trace, deltas):
   stats['unique rare deltas'] = len(rare_deltas)
   stats['unique rare deltas fract'] = (len(delta_unique) - len(rare_deltas)) / len(rare_deltas)
   stats['unique deltas (no rare)'] = len(delta_unique) - len(rare_deltas)
-  
+
   return stats
 
 @click.command()
@@ -43,30 +43,35 @@ def preproc_stats(dataset_dir, bins, histograms):
   addr = data['addr'].to_numpy()
   deltas = data['delta'].to_numpy()
   misses = data['miss'].to_numpy()
-  misses_idx = np.where(misses)[0]
   addr_misses = addr[misses]
   deltas_misses = data['delta_miss'][misses].to_numpy()
+  delta_accmiss = deltas[misses]
 
   # Compute histograms
-  if(histograms):
-    time_addr = np.histogram2d(range(len(addr)), addr, bins=bins)
+  if (histograms):
     time_dt = np.histogram2d(range(len(deltas)), deltas, bins=bins)
-    time_addr_miss = np.histogram2d(misses_idx, addr_misses, bins=bins)
-    time_dt_miss = np.histogram2d(misses_idx, deltas_misses, bins=bins)
+    missn_dtmiss = np.histogram2d(range(misses.sum()), deltas_misses, bins=bins)
+    missn_dt = np.histogram2d(range(misses.sum()), delta_accmiss, bins=bins)
+    miss_hist = np.histogram(misses.astype(int), bins=bins)
     np.savez(
       f'{dataset_dir}/histograms.npz',
-      time_addr=time_addr,
       time_dt=time_dt,
-      time_addr_miss=time_addr_miss,
-      time_dt_miss=time_dt_miss,
+      missn_dtmiss=missn_dtmiss,
+      missn_dt=missn_dt,
+      miss_hist=miss_hist
     )
 
   # Compute stats
-  raw_stats = stats_dict(addr, deltas)
+  access_stats = stats_dict(addr, deltas)
+  access_stats_df = pd.DataFrame(access_stats, index=['access']).transpose()
+
   misses_stats = stats_dict(addr_misses, deltas_misses)
-  raw_stats_df = pd.DataFrame(raw_stats, index=['raw']).transpose()
   misses_stats_df = pd.DataFrame(misses_stats, index=['miss']).transpose()
-  stats_df = pd.concat([raw_stats_df, misses_stats_df], axis=1)
+
+  accmiss_stats = stats_dict(addr_misses, delta_accmiss)
+  accmiss_stats_df = pd.DataFrame(accmiss_stats, index=['miss (access delta)']).transpose()
+
+  stats_df = pd.concat([access_stats_df, misses_stats_df, accmiss_stats_df], axis=1)
   stats_df.to_csv(f'{dataset_dir}/stats.csv')
 
 if __name__ == '__main__':

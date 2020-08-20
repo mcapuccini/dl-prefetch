@@ -1,11 +1,11 @@
-,raw,miss
-trace len,4217.0,156.0
-unique addr,863.0,156.0
-unique deltas,352.0,79.0
-deltas 50% mass,4.0,2.0
-deltas 50K coverage,1.0,1.0
-rare deltas (< 10),673.0,80.0
-rare deltas fract,0.1595921271045767,0.5128205128205128
-unique rare deltas,329.0,78.0
-unique rare deltas fract,0.06990881458966565,0.01282051282051282
-unique deltas (no rare),23.0,1.0
+,access,miss,miss (access delta)
+trace len,4217.0,156.0,156.0
+unique addr,863.0,156.0,156.0
+unique deltas,352.0,79.0,77.0
+deltas 50% mass,4.0,2.0,2.0
+deltas 50K coverage,1.0,1.0,1.0
+rare deltas (< 10),673.0,80.0,79.0
+rare deltas fract,0.1595921271045767,0.5128205128205128,0.5064102564102564
+unique rare deltas,329.0,78.0,76.0
+unique rare deltas fract,0.06990881458966565,0.01282051282051282,0.013157894736842105
+unique deltas (no rare),23.0,1.0,1.0
