@@ -46,19 +46,20 @@ def preproc_stats(dataset_dir, bins, histograms):
   addr_misses = addr[misses]
   deltas_misses = data['delta_miss'][misses].to_numpy()
   delta_accmiss = deltas[misses]
+  misses_idx = np.where(misses)[0]
 
   # Compute histograms
   if (histograms):
     time_dt = np.histogram2d(range(len(deltas)), deltas, bins=bins)
     missn_dtmiss = np.histogram2d(range(misses.sum()), deltas_misses, bins=bins)
     missn_dt = np.histogram2d(range(misses.sum()), delta_accmiss, bins=bins)
-    miss_hist = np.histogram(misses.astype(int), bins=bins)
+    time_dt_miss = np.histogram2d(misses_idx, delta_accmiss, bins=bins)
     np.savez(
       f'{dataset_dir}/histograms.npz',
       time_dt=time_dt,
       missn_dtmiss=missn_dtmiss,
       missn_dt=missn_dt,
-      miss_hist=miss_hist
+      time_dt_miss=time_dt_miss
     )
 
   # Compute stats
