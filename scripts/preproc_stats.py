@@ -24,6 +24,7 @@ def stats_dict(trace, deltas):
   # Rare
   stats['rare deltas (< 10)'] = rare_deltas_sum
   stats['rare deltas fract'] = rare_deltas_sum / len(trace)
+  stats['unique deltas (no rare)'] = len(delta_unique) - len(rare_deltas)
 
   # 50 mass and 50K coverage
   delta_50_mass = (delta_counts.cumsum() < (len(deltas) / 2)).sum() + 1
@@ -32,8 +33,7 @@ def stats_dict(trace, deltas):
 
   # Bit coverage
   stats['deltas 16 bit coverage'] = delta_counts[:(2**16)].sum() / len(trace)
-  stats['deltas 32 bit coverage'] = delta_counts[:(2**32)].sum() / len(trace)
-  stats['deltas 64 bit coverage'] = delta_counts[:(2**64)].sum() / len(trace)
+  stats['deltas full coverage bits'] = len(bin(len(delta_unique) - 1)) - 2
 
   return stats
 
@@ -58,13 +58,11 @@ def preproc_stats(dataset_dir, bins, histograms):
     missn_dtmiss = np.histogram2d(range(misses.sum()), deltas_misses, bins=bins)
     missn_dt = np.histogram2d(range(misses.sum()), delta_accmiss, bins=bins)
     time_dt_miss = np.histogram2d(misses_idx, delta_accmiss, bins=bins)
-    np.savez(
-      f'{dataset_dir}/histograms.npz',
-      time_dt=time_dt,
-      missn_dtmiss=missn_dtmiss,
-      missn_dt=missn_dt,
-      time_dt_miss=time_dt_miss
-    )
+    np.savez(f'{dataset_dir}/histograms.npz',
+             time_dt=time_dt,
+             missn_dtmiss=missn_dtmiss,
+             missn_dt=missn_dt,
+             time_dt_miss=time_dt_miss)
 
   # Compute stats
   access_stats = stats_dict(addr, deltas)
