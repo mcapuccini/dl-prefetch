@@ -25,7 +25,7 @@ def preproc_split(dataset_dir, heldout_fract):
   np.savez_compressed(
     f'{dataset_dir}/deltas_train_dev.npz',
     train=train,
-    test=dev
+    dev=dev
   )
   np.save(f'{dataset_dir}/deltas_test.npy', test)
 
