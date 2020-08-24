@@ -22,8 +22,11 @@ def preproc_split(dataset_dir, heldout_fract):
   assert (len(test) == len(dev))
 
   # Save
-  np.save(f'{dataset_dir}/deltas_train.npy', train)
-  np.save(f'{dataset_dir}/deltas_dev.npy', dev)
+  np.savez_compressed(
+    f'{dataset_dir}/deltas_train_dev.npz',
+    train=train,
+    test=dev
+  )
   np.save(f'{dataset_dir}/deltas_test.npy', test)
 
 if __name__ == '__main__':
