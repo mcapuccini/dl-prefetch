@@ -18,13 +18,12 @@ def preproc_windowing(
 ):
   # Load
   series = np.load(f'{dataset_dir}/{npz_archive}')[series]
-  series_torch = torch.from_numpy(series)
-
+  
   # Windowing
-  windowed_series = series_torch.unfold(0, lookback, 1)
-
-  # Save
-  torch.save(windowed_series, f'{dataset_dir}/{out_name}.{lookback}.pt')
+  with torch.no_grad():
+    series_torch = torch.from_numpy(series)
+    windowed_series = series_torch.unfold(0, lookback, 1)
+    torch.save(windowed_series, f'{dataset_dir}/{out_name}.{lookback}.pt')
 
 if __name__ == '__main__':
   preproc_windowing() # pylint: disable=no-value-for-parameter
