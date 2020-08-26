@@ -23,11 +23,11 @@ def preproc_split(dataset_dir, heldout_fract):
 
   # Save
   np.savez_compressed(
-    f'{dataset_dir}/deltas_train_dev.npz',
+    f'{dataset_dir}/deltas_split.npz',
     train=train,
-    dev=dev
+    dev=dev,
+    test=test
   )
-  np.save(f'{dataset_dir}/deltas_test.npy', test)
 
 if __name__ == '__main__':
   preproc_split() # pylint: disable=no-value-for-parameter
