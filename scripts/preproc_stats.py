@@ -33,6 +33,7 @@ def stats_dict(trace, deltas):
 
   # Bit coverage
   stats['deltas 16 bit coverage'] = delta_counts[:(2**16)].sum() / len(trace)
+  stats['deltas 23 bit coverage'] = delta_counts[:(2**23)].sum() / len(trace)
   stats['deltas full coverage bits'] = len(bin(len(delta_unique) - 1)) - 2
 
   return stats
