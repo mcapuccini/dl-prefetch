@@ -1,7 +1,7 @@
 # Imports
 import click
 import numpy as np
-from joblib import Parallel, delayed
+from joblib import Parallel, delayed, parallel_backend
 from tqdm import tqdm
 
 @click.command()
@@ -19,8 +19,10 @@ def preproc_ord_norm(dataset_dir, n_jobs):
 
   def encode(e):
     return np.abs(e - train_unique).argmin()
-  dev_ord = np.array(Parallel(n_jobs=n_jobs)(delayed(encode)(e) for e in tqdm(dev, desc='Dev encoding')))
-  test_ord = np.array(Parallel(n_jobs=n_jobs)(delayed(encode)(e) for e in tqdm(test, desc='Test encoding')))
+
+  with parallel_backend('threading', n_jobs=n_jobs):
+    dev_ord = np.array(Parallel()(delayed(encode)(e) for e in tqdm(dev, desc='Dev encoding')))
+    test_ord = np.array(Parallel()(delayed(encode)(e) for e in tqdm(test, desc='Test encoding')))
 
   # Normalization
   train_norm = train_ord / (len(train_unique) - 1)
