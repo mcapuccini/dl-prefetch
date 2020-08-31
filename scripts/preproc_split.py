@@ -1,6 +1,4 @@
 # Imports
-from math import ceil
-
 import click
 import numpy as np
 import pandas as pd
