@@ -52,8 +52,9 @@ def train_loop(
       
       # Compute batch metrics
       tr_history['loss'][e * n_batches + b] = loss.item()
-      for k, metric_f in metrics.items():
-        tr_history[k][e * n_batches + b] = metric_f(batch_y, outputs)
+      with torch.no_grad():
+        for k, metric_f in metrics.items():
+          tr_history[k][e * n_batches + b] = metric_f(batch_y, outputs)
 
       # Updated progress bar
       p_bar_str = f'[TRAIN] Epoch: {e+1}/{n_epochs}'
