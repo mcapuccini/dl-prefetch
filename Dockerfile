@@ -19,9 +19,6 @@ ENV PARSECDIR=/opt/parsec-${PARSEC_VERSION}
 ENV PATH=${PATH}:${PARSECDIR}/bin
 ENV MANPATH=${MANPATH}:${PARSECDIR}/man
 
-# Java
-ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
-
 # Configure apt
 RUN apt-get update \
     && apt-get -y install --no-install-recommends apt-utils dialog 2>&1 \
@@ -56,9 +53,6 @@ RUN apt-get update \
     #
     # Install PARSEC
     && sh -c 'curl -L http://parsec.cs.princeton.edu/download/${PARSEC_VERSION}/parsec-${PARSEC_VERSION}-core.tar.gz | tar -xvz -C /opt' \
-    # 
-    # Install Spark
-    && pip install --disable-pip-version-check --no-cache-dir pyspark==2.4.6 \
     #
     # Create a non-root user to use if preferred
     && groupadd --gid $USER_GID $USERNAME \
