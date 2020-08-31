@@ -7,7 +7,8 @@ from tqdm import tqdm
 @click.command()
 @click.option('--dataset-dir', required=True)
 @click.option('--n-jobs', default=-1, type=int)
-def preproc_ord_norm(dataset_dir, n_jobs):
+@click.option('--backend', default='threading')
+def preproc_ord_norm(dataset_dir, n_jobs, backend):
   # Load data
   data = np.load(f'{dataset_dir}/deltas_split.npz')
   train = data['train']
@@ -20,7 +21,7 @@ def preproc_ord_norm(dataset_dir, n_jobs):
   def encode(e):
     return np.abs(e - train_unique).argmin()
 
-  with parallel_backend('threading', n_jobs=n_jobs):
+  with parallel_backend(backend, n_jobs=n_jobs):
     dev_ord = np.array(Parallel()(delayed(encode)(e) for e in tqdm(dev, desc='Dev encoding')))
     test_ord = np.array(Parallel()(delayed(encode)(e) for e in tqdm(test, desc='Test encoding')))
 
