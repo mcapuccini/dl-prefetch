@@ -7,13 +7,12 @@ import pandas as pd
 
 @click.command()
 @click.option('--dataset-dir', required=True)
-@click.option('--heldout-fract', default=0.01, type=float)
-def preproc_split(dataset_dir, heldout_fract):
+@click.option('--n-heldout', default=500000, type=int)
+def preproc_split(dataset_dir, n_heldout):
   # Load data
   data = pd.read_feather(f'{dataset_dir}/trace_with_deltas.feather')['delta'].to_numpy()
 
   # Split
-  n_heldout = ceil(len(data) * heldout_fract)
   test = data[-n_heldout:]
   train_dev = data[:-n_heldout]
   train = train_dev[:-n_heldout]
