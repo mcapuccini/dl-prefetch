@@ -6,8 +6,8 @@ from tqdm import tqdm
 
 @click.command()
 @click.option('--dataset-dir', required=True)
-@click.option('--n-jobs', default=-1, type=int)
-@click.option('--backend', default='threading')
+@click.option('--n-jobs', default=1, type=int)
+@click.option('--backend', default='loky')
 def preproc_ord_norm(dataset_dir, n_jobs, backend):
   # Load data
   data = np.load(f'{dataset_dir}/deltas_split.npz')
