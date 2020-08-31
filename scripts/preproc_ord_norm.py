@@ -2,6 +2,12 @@
 import click
 import numpy as np
 
+def encode(to_encode, unique):
+  to_ret = np.zeros(len(to_encode))
+  for i, e in np.ndenumerate(to_encode):
+    to_ret[i] = np.abs(e - unique).argmin()
+  return to_ret
+
 @click.command()
 @click.option('--dataset-dir', required=True)
 def preproc_ord_norm(dataset_dir):
@@ -13,8 +19,8 @@ def preproc_ord_norm(dataset_dir):
 
   # Ordinal encoding
   train_unique, train_ord = np.unique(train, return_inverse=True)
-  dev_ord = np.abs(dev.reshape(-1,1) - train_unique).argmin(axis=1)
-  test_ord = np.abs(test.reshape(-1,1) - train_unique).argmin(axis=1)
+  dev_ord = encode(dev, train_unique)
+  test_ord = encode(test, train_unique)
 
   # Normalization
   train_norm = train_ord / (len(train_unique) - 1)
