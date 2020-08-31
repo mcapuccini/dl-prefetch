@@ -1,16 +1,13 @@
 # Imports
 import click
 import numpy as np
-
-def encode(to_encode, unique):
-  to_ret = np.zeros(len(to_encode))
-  for i, e in np.ndenumerate(to_encode):
-    to_ret[i] = np.abs(e - unique).argmin()
-  return to_ret
+from joblib import Parallel, delayed
+from tqdm import tqdm
 
 @click.command()
 @click.option('--dataset-dir', required=True)
-def preproc_ord_norm(dataset_dir):
+@click.option('--n-jobs', default=-1, type=int)
+def preproc_ord_norm(dataset_dir, n_jobs):
   # Load data
   data = np.load(f'{dataset_dir}/deltas_split.npz')
   train = data['train']
@@ -19,8 +16,11 @@ def preproc_ord_norm(dataset_dir):
 
   # Ordinal encoding
   train_unique, train_ord = np.unique(train, return_inverse=True)
-  dev_ord = encode(dev, train_unique)
-  test_ord = encode(test, train_unique)
+
+  def encode(e):
+    return np.abs(e - train_unique).argmin()
+  dev_ord = np.array(Parallel(n_jobs=n_jobs)(delayed(encode)(e) for e in tqdm(dev, desc='Dev encoding')))
+  test_ord = np.array(Parallel(n_jobs=n_jobs)(delayed(encode)(e) for e in tqdm(test, desc='Test encoding')))
 
   # Normalization
   train_norm = train_ord / (len(train_unique) - 1)
