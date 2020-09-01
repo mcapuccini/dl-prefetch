@@ -6,6 +6,7 @@ from tempfile import mkdtemp
 import click
 import numpy as np
 from joblib import Parallel, delayed, dump, load
+from tqdm import tqdm
 
 def encode_obj(idx, obj, unique, out):
   encoded = np.abs(obj - unique).argmin()
@@ -23,14 +24,15 @@ def encode(to_encode, unique, n_jobs):
   unique_mmap = load(unique_mmap_f, mmap_mode='r')
 
   # Encode in parallel
+  p_bar = tqdm(np.ndenumerate(to_encode), desc='Encoding', total=len(to_encode))
   Parallel(n_jobs=n_jobs)(delayed(encode_obj)(idx, obj, unique_mmap, out_mmap)
-                          for idx, obj in np.ndenumerate(to_encode))
+                          for idx, obj in p_bar)
 
   return out_mmap, tmp_folder
 
 @click.command()
 @click.option('--dataset-dir', required=True)
-@click.option('--n-jobs', default=-1, type=int)
+@click.option('--n-jobs', default=1, type=int)
 def preproc_ord_norm(dataset_dir, n_jobs):
   # Load data
   data = np.load(f'{dataset_dir}/deltas_split.npz')
