@@ -5,14 +5,14 @@ from tempfile import mkdtemp
 
 import click
 import numpy as np
-from joblib import Parallel, delayed, dump, load
+from joblib import Parallel, delayed, dump, load, parallel_backend
 from tqdm import tqdm
 
 def encode_obj(idx, obj, unique, out):
   encoded = np.abs(obj - unique).argmin()
   out[idx] = encoded
 
-def encode(to_encode, unique, n_jobs):
+def encode(to_encode, unique, n_jobs, backend):
   # Create mmap for dumping output
   tmp_folder = mkdtemp()
   out_mmap_f = path.join(tmp_folder, 'encoding.mmap')
@@ -25,15 +25,16 @@ def encode(to_encode, unique, n_jobs):
 
   # Encode in parallel
   p_bar = tqdm(np.ndenumerate(to_encode), desc='Encoding', total=len(to_encode))
-  Parallel(n_jobs=n_jobs)(delayed(encode_obj)(idx, obj, unique_mmap, out_mmap)
-                          for idx, obj in p_bar)
+  with parallel_backend(backend, n_jobs=n_jobs):
+    Parallel()(delayed(encode_obj)(idx, obj, unique_mmap, out_mmap) for idx, obj in p_bar)
 
   return out_mmap, tmp_folder
 
 @click.command()
 @click.option('--dataset-dir', required=True)
 @click.option('--n-jobs', default=1, type=int)
-def preproc_ord_norm(dataset_dir, n_jobs):
+@click.option('--backend', default='loky')
+def preproc_ord_norm(dataset_dir, n_jobs, backend):
   # Load data
   data = np.load(f'{dataset_dir}/deltas_split.npz')
   train = data['train']
@@ -42,8 +43,8 @@ def preproc_ord_norm(dataset_dir, n_jobs):
 
   # Ordinal encoding
   train_unique, train_ord = np.unique(train, return_inverse=True)
-  dev_ord, tmpf_dev = encode(dev, train_unique, n_jobs)
-  test_ord, tmpf_test = encode(test, train_unique, n_jobs)
+  dev_ord, tmpf_dev = encode(dev, train_unique, n_jobs, backend)
+  test_ord, tmpf_test = encode(test, train_unique, n_jobs, backend)
 
   # Normalization
   train_norm = train_ord / (len(train_unique) - 1)
