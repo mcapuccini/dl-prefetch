@@ -4,3 +4,4 @@ src/obj-intel64
 rc
 data/**/out
 **/__pycache__
+data
