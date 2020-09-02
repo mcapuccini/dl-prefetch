@@ -36,6 +36,9 @@ def preproc_ord_norm(dataset_dir):
   # Store
   np.savez_compressed(
     f'{dataset_dir}/deltas_ord_norm.npz',
+    train_ord=train_ord,
+    dev_ord=dev_ord,
+    test_ord=test_ord,
     train_norm=train_norm.astype(np.float32),
     dev_norm=dev_norm.astype(np.float32),
     test_norm=test_norm.astype(np.float32),
