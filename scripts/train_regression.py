@@ -35,8 +35,8 @@ def train_regression(dataset_dir, n_epochs, batch_size):
   # Define metrics
   def accuracy(y_true_norm, y_pred_norm):
     # Denormalize output
-    y_pred = torch.round(y_pred_norm * (max_class - 1)).int()
-    y_true = torch.round(y_true_norm * (max_class - 1)).int()
+    y_pred = torch.round(y_pred_norm * max_class).long()
+    y_true = torch.round(y_true_norm * max_class).long()
     # Return accuracy
     return accuracy_score(y_true, y_pred)
 
