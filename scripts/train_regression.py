@@ -32,14 +32,6 @@ def train_regression(dataset_dir, n_epochs, batch_size):
   dev = torch.load(f'{dataset_dir}/deltas_ord_norm.dev.64.pt')
   max_class = len(np.load(f'{dataset_dir}/deltas_ord_norm.npz')['train_unique'])
 
-  # Define metrics
-  def accuracy(y_true_norm, y_pred_norm):
-    # Denormalize output
-    y_pred = (y_pred_norm * max_class).long()
-    y_true = torch.round(y_true_norm * max_class).long()
-    # Return accuracy
-    return accuracy_score(y_true, y_pred)
-
   # Train
   model = Model()
   criterion = nn.MSELoss()
@@ -54,7 +46,6 @@ def train_regression(dataset_dir, n_epochs, batch_size):
     optimizer=optimizer,
     n_epochs=n_epochs,
     batch_size=batch_size,
-    metrics={'accuracy': accuracy},
   )
 
   # Save
