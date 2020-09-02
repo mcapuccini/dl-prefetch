@@ -1,7 +1,6 @@
 # Imports
 import numpy as np
 import torch
-from sklearn.metrics import accuracy_score
 from torch import nn, optim
 import click
 
@@ -30,7 +29,6 @@ def train_regression(dataset_dir, n_epochs, batch_size):
   # Load data
   train = torch.load(f'{dataset_dir}/deltas_ord_norm.train.64.pt')
   dev = torch.load(f'{dataset_dir}/deltas_ord_norm.dev.64.pt')
-  max_class = len(np.load(f'{dataset_dir}/deltas_ord_norm.npz')['train_unique'])
 
   # Train
   model = Model()
