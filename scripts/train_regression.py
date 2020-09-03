@@ -26,13 +26,14 @@ class Model(nn.Module):
 @click.option('--n-epochs', default=20, type=int)
 @click.option('--batch-size', default=256, type=int)
 @click.option('--win-size', default=64, type=int)
-def train_regression(dataset_dir, n_epochs, batch_size, win_size):
+@click.option('--device', default='cpu')
+def train_regression(dataset_dir, n_epochs, batch_size, win_size, device):
   # Load data
-  train = torch.load(f'{dataset_dir}/deltas_ord_norm.train.{win_size}.pt')
-  dev = torch.load(f'{dataset_dir}/deltas_ord_norm.dev.{win_size}.pt')
+  train = torch.load(f'{dataset_dir}/deltas_ord_norm.train.{win_size}.pt').to(device)
+  dev = torch.load(f'{dataset_dir}/deltas_ord_norm.dev.{win_size}.pt').to(device)
   data = np.load(f'{dataset_dir}/deltas_ord_norm.npz')
-  train_y_denorm = data['train_ord'][win_size - 1:]
-  dev_y_denorm = data['dev_ord'][win_size - 1:]
+  train_y_denorm = torch.from_numpy(data['train_ord'][win_size - 1:]).to(device)
+  dev_y_denorm = torch.from_numpy(data['dev_ord'][win_size - 1:]).to(device)
   max_class = len(data['train_unique'])
   assert (len(train_y_denorm) == len(train))
   assert (len(dev_y_denorm) == len(dev))
@@ -45,6 +46,7 @@ def train_regression(dataset_dir, n_epochs, batch_size, win_size):
 
   # Train
   model = Model()
+  model.to(device)
   criterion = nn.MSELoss()
   optimizer = optim.Adam(model.parameters())
   _, tr_history, dev_history = train_loop(
