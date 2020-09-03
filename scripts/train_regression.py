@@ -27,7 +27,12 @@ class Model(nn.Module):
 @click.option('--batch-size', default=256, type=int)
 @click.option('--win-size', default=64, type=int)
 @click.option('--device', default='cpu')
-def train_regression(dataset_dir, n_epochs, batch_size, win_size, device):
+@click.option('--num-threads', default=-1, type=int)
+def train_regression(dataset_dir, n_epochs, batch_size, win_size, device, num_threads):
+  # Set num threads
+  if num_threads > 0:
+    torch.set_num_threads(num_threads)
+
   # Load data
   train = torch.load(f'{dataset_dir}/deltas_ord_norm.train.{win_size}.pt').to(device)
   dev = torch.load(f'{dataset_dir}/deltas_ord_norm.dev.{win_size}.pt').to(device)
