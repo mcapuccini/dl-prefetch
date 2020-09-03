@@ -1,8 +1,9 @@
 # Imports
+import click
 import numpy as np
 import torch
+from sklearn.metrics import accuracy_score
 from torch import nn, optim
-import click
 
 from helpers import train_loop
 
@@ -24,11 +25,23 @@ class Model(nn.Module):
 @click.option('--dataset-dir', required=True)
 @click.option('--n-epochs', default=20, type=int)
 @click.option('--batch-size', default=256, type=int)
-@click.option('--dataset-dir', required=True)
-def train_regression(dataset_dir, n_epochs, batch_size):
+@click.option('--win-size', default=64, type=int)
+def train_regression(dataset_dir, n_epochs, batch_size, win_size):
   # Load data
-  train = torch.load(f'{dataset_dir}/deltas_ord_norm.train.64.pt')
-  dev = torch.load(f'{dataset_dir}/deltas_ord_norm.dev.64.pt')
+  train = torch.load(f'{dataset_dir}/deltas_ord_norm.train.{win_size}.pt')
+  dev = torch.load(f'{dataset_dir}/deltas_ord_norm.dev.{win_size}.pt')
+  data = np.load(f'{dataset_dir}/deltas_ord_norm.npz')
+  train_y_denorm = data['train_ord'][win_size - 1:]
+  dev_y_denorm = data['dev_ord'][win_size - 1:]
+  max_class = len(data['train_unique'])
+  assert (len(train_y_denorm) == len(train))
+  assert (len(dev_y_denorm) == len(dev))
+
+  # Metrics
+  def accuracy(y_true, y_pred, y_true_denorm): # pylint: disable=unused-argument
+    # Denormalize output
+    y_pred_denorm = torch.round(y_pred * max_class).long()
+    return accuracy_score(y_true_denorm, y_pred_denorm)
 
   # Train
   model = Model()
@@ -44,12 +57,15 @@ def train_regression(dataset_dir, n_epochs, batch_size):
     optimizer=optimizer,
     n_epochs=n_epochs,
     batch_size=batch_size,
+    train_y_denorm=train_y_denorm,
+    dev_y_denorm=dev_y_denorm,
+    metrics={'accuracy': accuracy},
   )
 
   # Save
   np.savez(
     f'{dataset_dir}/regression_history.npz',
-    tr_history=tr_history, 
+    tr_history=tr_history,
     dev_history=dev_history,
   )
 

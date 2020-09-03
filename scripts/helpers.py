@@ -17,6 +17,8 @@ def train_loop(
   n_epochs,
   batch_size,
   metrics={},
+  train_y_denorm=None,
+  dev_y_denorm=None,
 ):
   # Set warnings
   warnings.filterwarnings('ignore', category=UserWarning)
@@ -42,6 +44,7 @@ def train_loop(
       # Retrieve current batch
       batch_x = train_x[b * batch_size:(b + 1) * batch_size]
       batch_y = train_y[b * batch_size:(b + 1) * batch_size]
+      batch_y_denorm = train_y_denorm[b * batch_size:(b + 1) * batch_size]
 
       # Train on batch
       optimizer.zero_grad()
@@ -54,7 +57,7 @@ def train_loop(
       tr_history['loss'][e * n_batches + b] = loss.item()
       with torch.no_grad():
         for k, metric_f in metrics.items():
-          tr_history[k][e * n_batches + b] = metric_f(batch_y, outputs)
+          tr_history[k][e * n_batches + b] = metric_f(batch_y, outputs, batch_y_denorm)
 
       # Updated progress bar
       p_bar_str = f'[TRAIN] Epoch: {e+1}/{n_epochs}'
@@ -72,7 +75,7 @@ def train_loop(
       dev_history['loss'][e] = criterion(dev_out, dev_y).item()
       dev_str = f"[DEVEL] Epoch: {e+1}/{n_epochs}, loss: {dev_history['loss'][e]:.4f}"
       for k, metric_f in metrics.items():
-        dev_history[k][e] = metric_f(dev_y, dev_out)
+        dev_history[k][e] = metric_f(dev_y, dev_out, dev_y_denorm)
         dev_str += f', {k}: {dev_history[k][e]:.4f}'
       
       # Eval duration
